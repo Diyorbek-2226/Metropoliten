@@ -51,7 +51,7 @@ export default function Login() {
                 Login
               </label>
               <input
-                className="focus:bg-slate-600 block w-full p-2 rounded"
+                className=" block w-full p-2 rounded"
                 ref={UserRef}
                 id="username"
                 placeholder="F.I.SH"
@@ -64,7 +64,7 @@ export default function Login() {
                 Parol
               </label>
               <input
-                className="focus:bg-slate-600 block w-full p-2 rounded"
+                className=" block w-full p-2 rounded"
                 ref={PasswordRef}
                 id="password"
                 placeholder="Password"
