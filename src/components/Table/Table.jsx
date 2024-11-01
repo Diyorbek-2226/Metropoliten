@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import '../person/person.css'
+import BackButton from '../BackButton/BackButton';
 
 const Table = () => {
   const schedule = [
@@ -10,21 +10,17 @@ const Table = () => {
     { day: 'Pay', date: '16/05', time: '15:00', title: 'Uchrashuv', color: 'bg-yellow-100' },
     { day: 'Jum', date: '17/05', time: '9:00', title: 'Leksiya', color: 'bg-red-300' },
   ];
-  const navigate=useNavigate()
-  const onSubmitPage=(e)=>{
-    e.preventDefault();
-
-    navigate('/metro')
-  }
+ 
+  
 
   return (
     <div className="person flex flex-col items-center py-4 bg-gray-100 min-h-screen">
       <h2 className="text-xl font-semibold mb-4">Haftalik Jadval</h2>
       <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl">
         <div className="flex justify-between mb-2">
-          <button className="text-blue-500">⏮ Oldingi</button>
-          <button className="text-gray-600">Haftalik</button>
-          <button type='submit' onClick={onSubmitPage} className="text-blue-500">Bosh sahifaga qaytish</button>
+         <BackButton title={'⏮ Oldingi'}/>
+         <BackButton title={'Haftalik'}/>
+          <BackButton to={'/metro'} title={"Bosh sahifaga o'tish"}/>
         </div>
         <table className="w-full border-collapse border border-gray-200 text-center">
           <thead>

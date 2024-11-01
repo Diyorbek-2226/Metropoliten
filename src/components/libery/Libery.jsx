@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import '../person/person.css'
+import BackButton from '../BackButton/BackButton';
 
 const Library = () => {
   const categories = [
@@ -10,21 +10,15 @@ const Library = () => {
     { title: 'O‘quv qo‘llanmalar', button: 'Kitoblar' },
     { title: '', button: 'Kitoblar' },
   ];
-  const navigate=useNavigate()
-  const onSubmitPages=(e)=>{
-    e.preventDefault();
-    navigate('/metro')
-  }
-const onchangePages=(e)=>{
-  e.preventDefault();
-  navigate('/metro/liberary/liberys')
-}
+ 
+  
+
 
   return (
     <div className=" person flex flex-col items-center py-8 bg-gray-100 min-h-screen">
       <div className="flex justify-between w-full max-w-4xl mb-4 px-4">
-        <button type='submit' onClick={onchangePages} className="text-gray-600">{"O'quv qo'lanmalar"}</button>
-        <button type='submit' onClick={onSubmitPages} className="text-gray-600">Bosh sahifaga qaytish</button>
+      <BackButton to={'/metro/liberary/liberys'} title={"O'quv qo'lanmalar"}/>
+      <BackButton title={'Bosh sahifa'} to={'/metro'}/>
       </div>
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
         <h2 className="text-2xl font-semibold text-center mb-6">

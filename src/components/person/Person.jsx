@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import './person.css';
+import BackButton from "../BackButton/BackButton";
 
 export default function Person() {
     const user = useSelector((state) => state.auth.currentUser); // Select user from Redux
@@ -15,12 +16,7 @@ export default function Person() {
             <div className="container w-11/12 md:w-4/5 mx-auto">
                 <div className="mt-4 mb-4 flex items-center justify-between">
                     <h2 className="text-2xl font-semibold text-gray-700">Shaxsiy Ma'lumotlar</h2>
-                    <h2 
-                        className="onpages text-blue-500 cursor-pointer hover:text-blue-700"
-                        onClick={changePages}
-                    >
-                        Bosh sahifaga qaytish
-                    </h2>
+                    <BackButton title={"Bosh sahifa"} to={'/metro'}/>
                 </div>
 
                 <div className="data-person grid grid-cols-1 lg:grid-cols-2 items-start gap-6 mt-12 mb-12">

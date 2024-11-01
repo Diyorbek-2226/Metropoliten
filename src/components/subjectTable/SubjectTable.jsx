@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import '../person/person.css';
+import BackButton from "../BackButton/BackButton";
 
 export default function SubjectsTable() {
     const navigate = useNavigate();
     const [data, setData] = useState([]); // Bo'sh massiv bilan boshlaymiz
 
-    const changePages = () => {
-        navigate('/metro');
-    };
+    
 
     async function fetchSubjects() {
         try {
@@ -30,9 +29,7 @@ export default function SubjectsTable() {
         <div className="person p-6 bg-gray-100 min-h-screen">
             <div className="container w-11/12 md:w-4/5 mx-auto">
                 <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-700 cursor-pointer" onClick={changePages}>
-                        Bosh sahifaga qaytish
-                    </h2>
+                   <BackButton to={'/metro'}  title={"Bosh sahifaga o'tish"}/>
                     <select className="border border-gray-300 p-2 rounded text-gray-600">
                         <option>2023-2024 yil</option>
                         <option>2022-2023 yil</option>
