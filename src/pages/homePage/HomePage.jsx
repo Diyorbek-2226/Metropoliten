@@ -1,6 +1,8 @@
 import { MenuBar } from "../../components/menubar/index"
 import './homePage.css'
 import darsxona from '../../assets/darsxona.png'
+import Footer from "../../components/footer/Footer"
+import Fanlar from "../../components/fanlar/Fanlar"
 
 
 
@@ -53,7 +55,7 @@ export const HomePage = () => {
 </div>
     </div>
 </section>
-
-
+<Fanlar/>
+<Footer/>
     </> )
 }

@@ -1,12 +1,14 @@
 import "./login.css";
 import { useRef, useState } from "react";
-import axios from "axios";
+import { login } from "../../redux/auth/AuthSlice";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const UserRef = useRef();
-  const PasswordRef = useRef();
+  const dispatch = useDispatch();
+  const userRef = useRef();
   const navigate = useNavigate();
+  const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
   const errorLoginPost = localStorage.getItem("errorLogin");
 
@@ -14,27 +16,16 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
 
-    const user = UserRef.current.value;
-    const password = PasswordRef.current.value;
-
-    try {
-      const response = await axios.post(
-        "http://67.205.170.103:8001/api/v1/common/token/obtain",
-        {
-          passport: user,
-          password: password,
-        }
-      );
-
-      localStorage.setItem("token", response.data.access);
-      navigate("/metro");
-    } catch (error) {
-      console.error("Login failed:", error);
-      localStorage.setItem("errorLogin", error.message);
-      // Xato bo'lsa, foydalanuvchiga xabar berish
-    } finally {
-      setLoading(false);
+    const obj = {
+   passport : userRef.current.value,
+       password : passwordRef.current.value
     }
+    const resultAction = await dispatch(login(obj));
+    
+    if (login.fulfilled.match(resultAction)) {
+      navigate('/metro');
+    }
+    
   };
 
   return (
@@ -50,9 +41,9 @@ export default function Login() {
               <label className="block mt-1 mb-1" htmlFor="username">
                 Login
               </label>
-              <input
-                className=" block w-full p-2 rounded"
-                ref={UserRef}
+              <input placeholder='loginni kiriting '
+                className=" block w-full p-2 rounded text-black "
+                ref={userRef}
                 id="username"
                 placeholder="F.I.SH"
                 type="text"
@@ -64,8 +55,8 @@ export default function Login() {
                 Parol
               </label>
               <input
-                className=" block w-full p-2 rounded"
-                ref={PasswordRef}
+                className=" block w-full p-2 rounded text-black"
+                ref={passwordRef}
                 id="password"
                 placeholder="Password"
                 type="password"

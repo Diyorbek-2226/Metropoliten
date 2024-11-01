@@ -1,0 +1,13 @@
+.person{
+    background-image: url(../../assets/background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+.onpages{
+    padding: 5px 6px ;
+    background-color:#ffff;
+    border-radius: 8px;
+    font-weight: bold;
+    color: rgb(26, 25, 25);
+}

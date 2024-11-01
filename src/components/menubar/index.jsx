@@ -1,27 +1,28 @@
 import { Popover, Button } from "antd";
 import { useState } from "react";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
+import { Link } from "react-router-dom";
+
+
 
 export const MenuBar = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
-  const showLoading = () => {
-    setLoading(true);
-    
+  
     // Simple loading mock. You should add cleanup logic in real world.
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-  };
+  
 
   const content = (
-    <div  onClick={showLoading} loading={loading} className="font-mono">
-      <p>Dars jadvali</p>
-      <p>Vazifalar</p>
-      <p>Kutubxona</p>
-      <p>Yakuniy test</p>
-      <p>Shaxsiy ma’lumot</p>
+    <div loading={loading} className="font-mono ">
+     <Link to={'/metro/havola'}> Dars jadvali</Link>
+     <Link className="block" to={'/metro/tasks'}>Vazifalar </Link>
+     <p>Kutubxona</p>
+     <Link className="block" to={'/metro/tasktable'}>Yakuniy test </Link>
+      <Link to={'/metro/person'}> Shaxsiy {"ma'lumotlar"}</Link>
       
     </div>
   );
