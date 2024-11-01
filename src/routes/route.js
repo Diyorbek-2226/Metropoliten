@@ -6,6 +6,8 @@ import TasksTable from "../components/taskTable/TaskTable";
 import Table from "../components/Table/Table";
 import Liberary from "../components/libery/Libery";
 import ChildrenLibery from "../components/childrenLibery/ChildrenLibery";
+import TestTable from "../components/testTable/TestTable";
+import Quiz from "../components/quiz/Quiz";
 export const routeItem = [
   {
     id: 1,
@@ -41,6 +43,15 @@ export const routeItem = [
     element: ChildrenLibery,
     path: "/metro/liberary/liberys",
   },
-  
+  {
+    id: 7,
+    element: TestTable,
+    path: "/metro/testtable",
+  },
+  {
+    id: 8,
+    element: Quiz,
+    path: "/metro/testtable/quiz",
+  },
   
 ];

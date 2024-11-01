@@ -11,7 +11,7 @@ export default function BackButton({title, to }) {
     return (
         <button 
             onClick={handleBackClick} 
-            className="text-xl font-semibold text-gray-700 cursor-pointer hover:text-blue-500"
+            className="px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
         >
             {title}
         </button>

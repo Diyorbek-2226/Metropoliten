@@ -21,7 +21,7 @@ export const MenuBar = () => {
      <Link to={'/metro/havola'}> Dars jadvali</Link>
      <Link className="block" to={'/metro/tasks'}>Vazifalar </Link>
      <Link className="block " to={'/metro/liberary'}>Kutubxona</Link>
-     <Link className="block" to={'/metro/tasktable'}>Yakuniy test </Link>
+     <Link className="block" to={'/metro/testtable'}>Yakuniy test </Link>
       <Link to={'/metro/person'}> Shaxsiy {"ma'lumotlar"}</Link>
       
     </div>
