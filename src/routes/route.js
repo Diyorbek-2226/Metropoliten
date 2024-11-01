@@ -4,7 +4,9 @@ import { HomePage } from "../pages/homePage/HomePage";
 import Person from "../components/person/Person";
 import SubjectsTable from "../components/subjectTable/SubjectTable";
 import TasksTable from "../components/taskTable/TaskTable";
-
+import Table from "../components/Table/Table";
+import Liberary from "../components/libery/Libery";
+import ChildrenLibery from "../components/childrenLibery/ChildrenLibery";
 export const routeItem = [
   {
     id: 1,
@@ -12,7 +14,7 @@ export const routeItem = [
   },
   {
     id: 2,
-    element: Fanlar,
+    element: Table,
     path: "/metro/havola",
   },
   {
@@ -30,5 +32,16 @@ export const routeItem = [
     element: TasksTable,
     path: "/metro/tasktable",
   },
+  {
+    id: 6,
+    element: Liberary,
+    path: "/metro/liberary",
+  },
+  {
+    id: 6,
+    element: ChildrenLibery,
+    path: "/metro/liberary/liberys",
+  },
+  
   
 ];

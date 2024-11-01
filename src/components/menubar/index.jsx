@@ -10,7 +10,7 @@ export const MenuBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   
-    // Simple loading mock. You should add cleanup logic in real world.
+    
     setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -20,7 +20,7 @@ export const MenuBar = () => {
     <div loading={loading} className="font-mono ">
      <Link to={'/metro/havola'}> Dars jadvali</Link>
      <Link className="block" to={'/metro/tasks'}>Vazifalar </Link>
-     <p>Kutubxona</p>
+     <Link className="block " to={'/metro/liberary'}>Kutubxona</Link>
      <Link className="block" to={'/metro/tasktable'}>Yakuniy test </Link>
       <Link to={'/metro/person'}> Shaxsiy {"ma'lumotlar"}</Link>
       
