@@ -1,5 +1,4 @@
 
-import Fanlar from "../components/fanlar/Fanlar";
 import { HomePage } from "../pages/homePage/HomePage";
 import Person from "../components/person/Person";
 import SubjectsTable from "../components/subjectTable/SubjectTable";
