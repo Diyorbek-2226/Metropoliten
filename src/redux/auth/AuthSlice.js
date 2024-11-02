@@ -7,7 +7,7 @@ export const login = createAsyncThunk(
   async (obj, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://backend.ithouseedu.uz/api/v1/common/token/obtain",
+        "http://67.205.170.103:8001/api/v1/common/token/obtain",
         obj
       );
       localStorage.setItem("token", response.data.access);
