@@ -1,10 +1,28 @@
-.Home{
-    padding: 10px 0px ;
+.Home {
+    padding: 10px 0;
 }
-.main{
-    background-image: url(../../assets/hom.png);
+
+.main {
+    background-image: url(../../assets/homePage.svg);
     padding: 3px 20px;
 }
-.sections{
-    padding: 40px 0px  20px;
+
+.sections {
+    padding: 40px 0 20px;
+}
+
+/* 330px va undan katta ekranlar uchun */
+@media (min-width: 330px) {
+    .Home {
+        padding: 15px 0; /* 330px va undan katta ekranlarda paddingni oshirish */
+    }
+
+    .main {
+        background-size: cover; /* Rasmni ekran kengligiga moslashtiradi */
+        padding: 10px 30px; /* Ichki chegara o'lchamini oshirish */
+    }
+
+    .sections {
+        padding: 50px 0 30px; /* Umumiy paddingni oshirish */
+    }
 }

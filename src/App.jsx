@@ -1,39 +1,88 @@
-// import Havola from './pages/homePage/havola/Havola'
-// import Darsjadvali from './components/darsjagvali/Darsjadvali'
-// import Fanlar from './components/fanlar/Fanlar'
-// import Footer from './components/footer/Footer'
-// import { HomePage } from './pages/homePage/HomePage'
-// import { MenuBar } from './components/menubar/MenuBar'
-// import Login from './pages/login/Login'
-// import Login2 from './pages/login2/Login2'
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { useEffect, useState, Suspense } from 'react';
 
-import { MetroLayout } from "./layout/metro-layout";
 import Login from "./pages/login/Login";
-
-import { Route, Routes } from "react-router-dom";
-import { routeItem } from "./routes/route";
+import { MetroLayout } from './layout/metro-layout';
+import AdminLayout from './pages/admiLayout/AdminLayout';
 import { NotFound } from "./components/notFound/not-found";
-
+import { routeItem } from "./routes/route";
+import Footer from './components/footer/Footer';
+ // Assuming you have created this component
 
 function App() {
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const roleFromLogin = localStorage.getItem('userRole'); 
+    setUserRole(roleFromLogin);
+  }, []);
+
+  if (!userRole) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
-    
-    <>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/metro" element={<MetroLayout />}>
+    <Routes>
+      {/* Login Route */}
+      <Route path="/" element={<Login setUserRole={setUserRole} />} />
+      
+      {/* Admin Layout with Suspense */}
+      {userRole === 'admin' && (
+        <Route path="/admin" element={<AdminLayout />}>
           {routeItem.map(({ id, path, element: Element }) => (
             <Route
-              path={path}
               key={id}
-              index={path ? false : true}
-              element={<Element />}
+              path={path}
+              element={
+                <Suspense fallback={ <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>}>
+                  <Element />
+                </Suspense>
+              }
             />
           ))}
           <Route path="*" element={<NotFound />} />
         </Route>
-      </Routes>
-    </>
+      )}
+
+      {/* Student Layout with Suspense */}
+      {userRole === 'student' && (
+        <Route path="/student" element={<MetroLayout />}>
+          {routeItem.map(({ id, path, element: Element }) => (
+            <Route
+              key={id}
+              path={path}
+              element={
+                <Suspense fallback={ <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>}>
+                  <Element />
+                </Suspense>
+              }
+            />
+          ))}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      )}
+
+      {/* Teacher Layout with Suspense */}
+      {userRole === 'teacher' && (
+        <Route path="/teacher" element={<Footer />}>
+          {routeItem.map(({ id, path, element: Element }) => (
+            <Route
+              key={id}
+              path={path}
+              element={
+                <Suspense fallback={ <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>}>
+                  <Element />
+                </Suspense>
+              }
+            />
+          ))}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      )}
+
+      {/* Catch-All Route */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

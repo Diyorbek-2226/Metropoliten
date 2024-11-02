@@ -23,7 +23,7 @@ export const MenuBar = () => {
      <Link className="block " to={'/metro/liberary'}>Kutubxona</Link>
      <Link className="block" to={'/metro/testtable'}>Yakuniy test </Link>
       <Link to={'/metro/person'}> Shaxsiy {"ma'lumotlar"}</Link>
-      
+      <Link className="block" to={'/metro/tasks/task'}>tableTask</Link>
     </div>
   );
 

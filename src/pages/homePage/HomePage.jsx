@@ -9,19 +9,19 @@ export const HomePage = () => {
     <>
       {/* Header */}
       <header className="fixed bg-white w-full shadow-md">
-        <div className="Home container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="Home container w-4/5 mx-auto px-4 sm:px-6 lg:px-8">
           <MenuBar />
         </div>
       </header>
 
       {/* Main Section */}
       <main className="main bg-custom-gray pt-20">
-        <div className="Main h-[500px] container mx-auto px-4 sm:px-6 lg:px-8 grid items-center">
+        <div className="Main h-[520px] container w-4/5 mx-auto px-4 sm:px-6 lg:px-8 grid items-center">
           <div className="text-white text-center sm:text-left">
-            <h1 className="text-2xl sm:text-4xl font-bold leading-tight">
+            <h1 className="text-2xl sm:text-4xl  leading-tight">
               Metropoliten kadrlarini tayyorlash ilmiy innovatsion
             </h1>
-            <h1 className="text-2xl sm:text-4xl font-bold leading-tight">
+            <h1 className="text-2xl sm:text-4xl  leading-tight">
               markazi
             </h1>
           </div>
@@ -29,8 +29,8 @@ export const HomePage = () => {
       </main>
 
       {/* Information Section */}
-      <section className="sections bg-custom-gray py-8">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="sections    bg-custom-gray py-8">
+        <div className="container w-4/5 mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section_title flex flex-col sm:flex-row items-center sm:items-start justify-between space-y-4 sm:space-y-0">
             {/* Left Side */}
             <div className="section_left w-full sm:w-1/2">

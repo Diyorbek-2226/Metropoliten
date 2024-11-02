@@ -1,17 +1,21 @@
+import { lazy, Suspense } from 'react';
 
-import { HomePage } from "../pages/homePage/HomePage";
-import Person from "../components/person/Person";
-import SubjectsTable from "../components/subjectTable/SubjectTable";
-import TasksTable from "../components/taskTable/TaskTable";
-import Table from "../components/Table/Table";
-import Liberary from "../components/libery/Libery";
-import ChildrenLibery from "../components/childrenLibery/ChildrenLibery";
-import TestTable from "../components/testTable/TestTable";
-import Quiz from "../components/quiz/Quiz";
+const HomePage = lazy(() => import("../pages/homePage/HomePage"));
+const Person = lazy(() => import("../components/person/Person"));
+const SubjectsTable = lazy(() => import("../components/subjectTable/SubjectTable"));
+const TasksTable = lazy(() => import("../components/taskTable/TaskTable"));
+const Table = lazy(() => import("../components/Table/Table"));
+const Liberary = lazy(() => import("../components/libery/Libery"));
+const ChildrenLibery = lazy(() => import("../components/childrenLibery/ChildrenLibery"));
+const TestTable = lazy(() => import("../components/testTable/TestTable"));
+const Quiz = lazy(() => import("../components/quiz/Quiz"));
+const TableTask = lazy(() => import("../components/tableTask/TableTask"));
+
 export const routeItem = [
   {
     id: 1,
     element: HomePage,
+    path: "/",
   },
   {
     id: 2,
@@ -39,19 +43,23 @@ export const routeItem = [
     path: "/metro/liberary",
   },
   {
-    id: 6,
+    id: 7,
     element: ChildrenLibery,
     path: "/metro/liberary/liberys",
   },
   {
-    id: 7,
+    id: 8,
     element: TestTable,
     path: "/metro/testtable",
   },
   {
-    id: 8,
+    id: 9,
     element: Quiz,
     path: "/metro/testtable/quiz",
   },
-  
+  {
+    id: 10,
+    element: TableTask,
+    path: "/metro/tasks/task",
+  },
 ];

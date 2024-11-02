@@ -1,10 +1,9 @@
 // import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import Footer from "../components/footer/Footer";
-import { MenuBar } from "../components/menubar";
 
 
-export const MetroLayout = () => {
+
+export  const MetroLayout = () => {
   const token = localStorage.getItem("token");
   localStorage.removeItem("errorLogin");
 
