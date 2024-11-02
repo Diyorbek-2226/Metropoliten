@@ -11,7 +11,7 @@ export default function SubjectsTable() {
 
     async function fetchSubjects() {
         try {
-            const response = await fetch('https://backend.ithouseedu.uz/api/v1/main/student-list/');
+            const response = await fetch('http://67.205.170.103:8001/api/v1//main/student-list/');
             const data = await response.json();
             setData(data.results || []); // 'results' bo'lmasa, bo'sh massiv bilan to'ldiramiz
         } catch (error) {
