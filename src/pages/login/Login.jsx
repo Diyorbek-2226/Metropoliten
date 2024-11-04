@@ -7,25 +7,38 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const dispatch = useDispatch();
   const userRef = useRef();
-  const navigate = useNavigate();
   const passwordRef = useRef();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const errorLoginPost = localStorage.getItem("errorLogin");
+  const [error, setError] = useState(''); // State to manage login error messages
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(''); // Reset error before login attempt
 
     const obj = {
-   passport : userRef.current.value,
-       password : passwordRef.current.value
-    }
+      passport: userRef.current.value,
+      password: passwordRef.current.value,
+    };
+
     const resultAction = await dispatch(login(obj));
-    
+
     if (login.fulfilled.match(resultAction)) {
-      navigate('/metro');
+      // Check the user's role and navigate accordingly
+      const role = localStorage.getItem("role");
+      if (role === "admin") {
+        navigate('/admin');        
+      } else if (role === "teacher") {
+        navigate('/teacher');   
+      } else if (role === "student") {
+        navigate("/student");
+      }
+    } else {
+      setError("Login failed. Please check your credentials."); // Set error message
     }
-    
+
+    setLoading(false)
   };
 
   return (
@@ -41,29 +54,28 @@ export default function Login() {
               <label className="block mt-1 mb-1" htmlFor="username">
                 Login
               </label>
-              <input placeholder='loginni kiriting '
-                className=" block w-full p-2 rounded text-black "
+              <input
+                className="block w-full p-2 rounded text-black"
                 ref={userRef}
                 id="username"
                 placeholder="F.I.SH"
                 type="text"
               />
-              {errorLoginPost ? errorLoginPost : ""}
             </div>
             <div className="mt-4">
               <label className="block mt-1 mb-1" htmlFor="password">
                 Parol
               </label>
               <input
-                className=" block w-full p-2 rounded text-black"
+                className="block w-full p-2 rounded text-black"
                 ref={passwordRef}
                 id="password"
                 placeholder="Password"
                 type="password"
               />
-              {errorLoginPost ? errorLoginPost : ""}
               <small className="block mt-2 mb-2">Forgot password?</small>
             </div>
+            {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
             <div className="mt-6">
               <button
                 onClick={handleLogin}

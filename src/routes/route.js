@@ -8,6 +8,7 @@ import Liberary from "../components/libery/Libery";
 import ChildrenLibery from "../components/childrenLibery/ChildrenLibery";
 import TestTable from "../components/testTable/TestTable";
 import Quiz from "../components/quiz/Quiz";
+import AdminLayout from "../components/adminLayout/AdminLayout";
 export const routeItem = [
   {
     id: 1,
@@ -54,4 +55,12 @@ export const routeItem = [
     path: "/metro/testtable/quiz",
   },
   
+];
+
+export const routeAdmin = [
+  {
+    id: 1,
+    element: AdminLayout,
+    path: "/admin",
+  },
 ];

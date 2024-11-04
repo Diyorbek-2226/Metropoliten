@@ -37,6 +37,8 @@ export const AuthSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.currentUser = action.payload.data;
+        localStorage.setItem("role" , action.payload.data.role)
+        localStorage.setItem("id" , action.payload.data.id);
         
       })
       .addCase(login.rejected, (state, action) => {

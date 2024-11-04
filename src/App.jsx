@@ -11,11 +11,12 @@ import { MetroLayout } from "./layout/metro-layout";
 import Login from "./pages/login/Login";
 
 import { Route, Routes } from "react-router-dom";
-import { routeItem } from "./routes/route";
+import { routeItem , routeAdmin } from "./routes/route";
 import { NotFound } from "./components/notFound/not-found";
 
 
 function App() {
+
   return (
     
     <>
@@ -30,6 +31,14 @@ function App() {
               element={<Element />}
             />
           ))}
+          {/* {routeAdmin.map(({ id, path, element: Element }) => (
+            <Route 
+              path={path}
+              key={id}
+              index={path ? false : true}
+              element={<Element />}
+            />
+          ))} */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
