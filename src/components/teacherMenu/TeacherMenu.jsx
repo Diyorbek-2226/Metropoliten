@@ -1,3 +1,6 @@
+
+
+
 import { Popover, Button } from "antd";
 import { useState } from "react";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
@@ -5,7 +8,7 @@ import { Link } from "react-router-dom";
 
 
 
-export const MenuBar = () => {
+export const TeacherMenu = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,11 +21,11 @@ export const MenuBar = () => {
 
   const content = (
     <div loading={loading} className="font-mono ">
-     <Link to={'/student/havola'}> Dars jadvali</Link>
-     <Link className="block" to={'/student/tasks'}>Vazifalar </Link>
-     <Link className="block " to={'/student/liberary'}>Kutubxona</Link>
-     <Link className="block" to={'/student/testtable'}>Yakuniy test </Link>
-      <Link to={'/student/person'}> Shaxsiy {"ma'lumotlar"}</Link>
+     <Link to={'/teacher/havola'}> Dars jadvali</Link>
+     <Link className="block" to={'/teacher/tasks'}>Vazifalar </Link>
+     <Link className="block " to={'/teacher/liberary'}>Kutubxona</Link>
+     <Link className="block" to={'/teacher/testtable'}>Yakuniy test </Link>
+      <Link to={'/teacher/person'}> Shaxsiy {"ma'lumotlar"}</Link>
       
     </div>
   );

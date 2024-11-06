@@ -1,59 +1,79 @@
+import '../person/person.css';  
+import BackButton from '../BackButton/BackButton';  
+import { useState, useEffect } from 'react';  
 
-import '../person/person.css'
-import BackButton from '../BackButton/BackButton';
+const Table = () => {  
+  const [schedules, setSchedules] = useState([]);  
+  const [loading, setLoading] = useState(true);  
+  const [error, setError] = useState(null);  
 
-const Table = () => {
-  const schedule = [
-    { day: 'Dush', date: '13/05', time: '8:30', title: 'Tadbir 1', color: 'bg-blue-400' },
-    { day: 'Sesh', date: '14/05', time: '10:30', title: 'Matematika', color: 'bg-yellow-300' },
-    { day: 'Chor', date: '15/05', time: '11:30', title: 'Dasturlash', color: 'bg-green-300' },
-    { day: 'Pay', date: '16/05', time: '15:00', title: 'Uchrashuv', color: 'bg-yellow-100' },
-    { day: 'Jum', date: '17/05', time: '9:00', title: 'Leksiya', color: 'bg-red-300' },
-  ];
- 
-  
+  const fetchSchedule = async () => {  
+    try {  
+      const response = await fetch('http://67.205.170.103:8001/api/v1/main/schedule/');  
+      if (!response.ok) {  
+        throw new Error('Failed to fetch data');  
+      }  
+      const data = await response.json();  
+      console.log(data.results); // Verify the structure of data  
+      setSchedules(data.results || []); // Assuming data has a 'results' key  
+    } catch (err) {  
+      console.error("Error fetching schedule:", err);  
+      setError(err.message);  
+    } finally {  
+      setLoading(false);  
+    }  
+  };  
 
-  return (
-    <div className="person flex flex-col items-center py-4 bg-gray-100 min-h-screen">
-      <h2 className="text-xl font-semibold mb-4">Haftalik Jadval</h2>
-      <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl">
-        <div className="flex justify-between mb-2">
-         <BackButton title={'⏮ Oldingi'}/>
-         <BackButton title={'Haftalik'}/>
-          <BackButton to={'/metro'} title={"Bosh sahifaga o'tish"}/>
-        </div>
-        <table className="w-full border-collapse border border-gray-200 text-center">
-          <thead>
-            <tr>
-              <th className="border border-gray-200 p-2">Vaqt</th>
-              {['Dush 13/05', 'Sesh 14/05', 'Chor 15/05', 'Pay 16/05', 'Jum 17/05'].map((day) => (
-                <th key={day} className="border border-gray-200 p-2">{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {['8:30', '9:30', '10:30', '11:30', '12:30', '13:30', '14:30', '15:30'].map((time) => (
-              <tr key={time}>
-                <td className="border border-gray-200 p-2">{time}</td>
-                {Array.from({ length: 5 }).map((_, index) => {
-                  const event = schedule.find(e => e.time === time && e.day === ['Dush', 'Sesh', 'Chor', 'Pay', 'Jum'][index]);
-                  return (
-                    <td key={index} className="border border-gray-200 p-2">
-                      {event ? (
-                        <div className={`${event.color} p-2 rounded-md`}>
-                          <span>{event.title}</span>
-                        </div>
-                      ) : null}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
+  useEffect(() => {  
+    fetchSchedule();  
+  }, []);  
+
+  // Define time slots and days  
+  const times = ['08:00', '09:30', '11:00', '12:00', '13:30', '15:00']; // Adjust based on your API  
+  const days = ['Dushanba ', 'Seshanba', 'Chorshanba','Payshanba','Juma','Shanba']; // Adjust days according to your data  
+
+  return (  
+    <div className="person flex flex-col items-center py-4 bg-gray-100 min-h-screen">  
+      <h2 className="text-xl font-semibold mb-4">Haftalik Jadval</h2>  
+      <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl">  
+        <div className="flex justify-between mb-2">  
+          <BackButton title={'⏮ Oldingi'} />  
+          <BackButton title={'Haftalik'} />  
+          <BackButton to={'/student'} title={"Bosh sahifaga o'tish"} />  
+        </div>  
+        <table className="w-full border-collapse border border-gray-200 text-center">  
+          <thead>  
+            <tr>  
+              <th className="border border-gray-200 p-2">Vaqt</th>  
+              {days.map((day, index) => (  
+                <th key={index} className="border border-gray-200 p-2">{day}</th>  
+              ))}  
+            </tr>  
+          </thead>  
+          <tbody>  
+            {schedules.map((el,index) => (<> 
+              <tr key={index}>  
+                <td className="border border-gray-200 p-2">{el.start_time}</td> 
+                <td className="border border-gray-200 p-2">{el.course.name}</td>  
+                <td className="border border-gray-200 p-2">{el.end_time}</td> 
+              </tr> 
+              <tr>
+                <td className="border border-gray-200 p-2">{el.start_time}</td> 
+              
+              </tr> 
+              <tr>
+                <td className="border border-gray-200 p-2">{el.end_time}</td> 
+              
+              </tr> 
+              
+              </> ))}  
+          </tbody>  
+        </table>  
+        {loading && <p>Loading...</p>}  
+        {error && <p>Error: {error}</p>}  
+      </div>  
+    </div>  
+  );  
+};  
 
 export default Table;

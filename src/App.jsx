@@ -1,48 +1,45 @@
-// import Havola from './pages/homePage/havola/Havola'
-// import Darsjadvali from './components/darsjagvali/Darsjadvali'
-// import Fanlar from './components/fanlar/Fanlar'
-// import Footer from './components/footer/Footer'
-// import { HomePage } from './pages/homePage/HomePage'
-// import { MenuBar } from './components/menubar/MenuBar'
-// import Login from './pages/login/Login'
-// import Login2 from './pages/login2/Login2'
-
-import { MetroLayout } from "./layout/metro-layout";
+// src/App.js
+import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "./pages/login/Login";
-
-import { Route, Routes } from "react-router-dom";
-import { routeItem , routeAdmin } from "./routes/route";
-import { NotFound } from "./components/notFound/not-found";
-
+import ProtectedRoute from "./components/ProtectedRoute";
+import studentRoutes from "./routes/studentRoutes";
+import adminRoutes from "./routes/adminRoutes";
+import teacherRoutes from "./routes/teacherRoutes";
 
 function App() {
+  const token = localStorage.getItem("token");
 
   return (
-    
-    <>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/metro" element={<MetroLayout />}>
-          {routeItem.map(({ id, path, element: Element }) => (
-            <Route
-              path={path}
-              key={id}
-              index={path ? false : true}
-              element={<Element />}
-            />
-          ))}
-          {/* {routeAdmin.map(({ id, path, element: Element }) => (
-            <Route 
-              path={path}
-              key={id}
-              index={path ? false : true}
-              element={<Element />}
-            />
-          ))} */}
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={token ? <Navigate to="/admin" /> : <Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
+
+      {adminRoutes.map(({ id, path, element }) => (
+        <Route
+          key={`admin-${id}`}
+          path={path}
+          element={<ProtectedRoute element={element} allowedRoles={["admin"]} />}
+        />
+      ))}
+
+      {studentRoutes.map(({ id, path, element }) => (
+        <Route
+          key={`student-${id}`}
+          path={path}
+          element={<ProtectedRoute element={element} allowedRoles={["student"]} />}
+        />
+      ))}
+       {teacherRoutes.map(({ id, path, element }) => (
+        <Route
+          key={`teacher-${id}`}
+          path={path}
+          element={<ProtectedRoute element={element} allowedRoles={["teacher"]} />}
+        />
+      ))}
+
+      <Route path="/not-authorized" element={<div>Not Authorized</div>} />
+      <Route path="*" element={<div>Page Not Found</div>} />
+    </Routes>
   );
 }
 

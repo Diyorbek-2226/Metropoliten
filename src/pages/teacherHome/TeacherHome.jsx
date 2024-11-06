@@ -1,8 +1,9 @@
-import { MenuBar } from "../../components/menubar/index";
+
 import "./homePage.css";
 import darsxona from "../../assets/darsxona.png";
 import Footer from "../../components/footer/Footer";
 import Fanlar from "../../components/fanlar/Fanlar";
+import { TeacherMenu } from "../../components/teacherMenu/TeacherMenu";
 
  const HomePage = () => {
   return (
@@ -10,7 +11,7 @@ import Fanlar from "../../components/fanlar/Fanlar";
       {/* Header */}
       <header className="fixed bg-white w-full shadow-md">
         <div className="Home container mx-auto px-4 sm:px-6 lg:px-8">
-          <MenuBar />
+          <TeacherMenu/>
         </div>
       </header>
 
