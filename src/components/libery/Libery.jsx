@@ -1,32 +1,11 @@
 import '../person/person.css';
 import BackButton from '../BackButton/BackButton';
-import { useState, useEffect } from 'react';
+import useFetchData from '../../hook/useFetch/UseFetch'; // Adjust the path as needed
 
 const Library = () => {
-  const [libery, setLibery] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const fetchSchedule = async () => {
-    try {
-      const response = await fetch('http://67.205.170.103:8001/api/v1/main/library/');
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const data = await response.json();
-      console.log("Fetched data:", data.results);
-      setLibery(data.results || []);
-    } catch (err) {
-      console.error("Error fetching schedule:", err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSchedule();
-  }, []);
+  const { data, loading, error } = useFetchData('main/library/');
+  const library = data?.results || []; 
 
   return (
     <div className="person flex flex-col items-center py-8 h-[230vh] min-h-screen">
@@ -39,12 +18,14 @@ const Library = () => {
           Metropoliten elektron kutubxonasi
         </h2>
         <hr className="border-blue-500 mb-6" />
-        
-        {loading && <p className='w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin'></p>}
+
+        {loading && (
+          <p className='w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin'></p>
+        )}
         {error && <p>Error: {error}</p>}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {libery.map((el, index) => (
+          {library.map((el, index) => (
             <div
               key={index}
               className="flex flex-col items-center border-2 border-blue-300 p-4 rounded-lg"

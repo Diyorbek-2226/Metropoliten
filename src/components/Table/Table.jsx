@@ -1,79 +1,85 @@
-import '../person/person.css';  
-import BackButton from '../BackButton/BackButton';  
-import { useState, useEffect } from 'react';  
+import { useEffect, useState } from 'react';
+import '../person/person.css';
+import BackButton from '../BackButton/BackButton';
+import useFetchData from '../../hook/useFetch/UseFetch'; // Adjust the path as needed
 
-const Table = () => {  
-  const [schedules, setSchedules] = useState([]);  
-  const [loading, setLoading] = useState(true);  
-  const [error, setError] = useState(null);  
+const Table = () => {
+  const [days, setDays] = useState([]);
+  const [times, setTimes] = useState({});
+  
+  // Use the custom hook to fetch data
+  const { data, loading, error } = useFetchData('main/schedule/?limit=10');
+  const schedule = data?.results || [];  // Safely handle case when data is null
 
-  const fetchSchedule = async () => {  
-    try {  
-      const response = await fetch('http://67.205.170.103:8001/api/v1/main/schedule/');  
-      if (!response.ok) {  
-        throw new Error('Failed to fetch data');  
-      }  
-      const data = await response.json();  
-      console.log(data.results); // Verify the structure of data  
-      setSchedules(data.results || []); // Assuming data has a 'results' key  
-    } catch (err) {  
-      console.error("Error fetching schedule:", err);  
-      setError(err.message);  
-    } finally {  
-      setLoading(false);  
-    }  
-  };  
+  // Process schedule data once it's available
+  useEffect(() => {
+    if (schedule.length > 0) {
+      // Extract unique days
+      const uniqueDays = [...new Set(schedule.map(item => item.day))];
+      setDays(uniqueDays);
 
-  useEffect(() => {  
-    fetchSchedule();  
-  }, []);  
+      // Set times for each day
+      const timesByDay = {};
+      uniqueDays.forEach(day => {
+        const dayTimes = schedule
+          .filter(item => item.day === day)
+          .map(item => item.start_time.slice(0, 5)); // Format to HH:MM
+        timesByDay[day] = [...new Set(dayTimes)];
+      });
+      setTimes(timesByDay);
+    }
+  }, [schedule]);
 
-  // Define time slots and days  
-  const times = ['08:00', '09:30', '11:00', '12:00', '13:30', '15:00']; // Adjust based on your API  
-  const days = ['Dushanba ', 'Seshanba', 'Chorshanba','Payshanba','Juma','Shanba']; // Adjust days according to your data  
+  // Display loading or error messages if needed
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading schedule: {error.message}</p>;
 
-  return (  
-    <div className="person flex flex-col items-center py-4 bg-gray-100 min-h-screen">  
-      <h2 className="text-xl font-semibold mb-4">Haftalik Jadval</h2>  
-      <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl">  
-        <div className="flex justify-between mb-2">  
-          <BackButton title={'⏮ Oldingi'} />  
-          <BackButton title={'Haftalik'} />  
-          <BackButton to={'/student'} title={"Bosh sahifaga o'tish"} />  
-        </div>  
-        <table className="w-full border-collapse border border-gray-200 text-center">  
-          <thead>  
-            <tr>  
-              <th className="border border-gray-200 p-2">Vaqt</th>  
-              {days.map((day, index) => (  
-                <th key={index} className="border border-gray-200 p-2">{day}</th>  
-              ))}  
-            </tr>  
-          </thead>  
-          <tbody>  
-            {schedules.map((el,index) => (<> 
-              <tr key={index}>  
-                <td className="border border-gray-200 p-2">{el.start_time}</td> 
-                <td className="border border-gray-200 p-2">{el.course.name}</td>  
-                <td className="border border-gray-200 p-2">{el.end_time}</td> 
-              </tr> 
-              <tr>
-                <td className="border border-gray-200 p-2">{el.start_time}</td> 
-              
-              </tr> 
-              <tr>
-                <td className="border border-gray-200 p-2">{el.end_time}</td> 
-              
-              </tr> 
-              
-              </> ))}  
-          </tbody>  
-        </table>  
-        {loading && <p>Loading...</p>}  
-        {error && <p>Error: {error}</p>}  
-      </div>  
-    </div>  
-  );  
-};  
+  return (
+    <div className="person flex flex-col items-center py-4 bg-gray-100 min-h-screen">
+      <h2 className="text-xl font-semibold mb-4">Haftalik Jadval</h2>
+      <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl">
+        <div className="flex justify-between mb-2">
+          <BackButton title={'⏮ Oldingi'} />
+          <BackButton title={'Haftalik'} />
+          <BackButton to={'/student'} title={"Bosh sahifaga o'tish"} />
+        </div>
+        <table className="w-full border-collapse border border-gray-300 text-center">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 p-2 w-24 h-16">Vaqt / Kun</th>
+              {days.map((day, index) => (
+                <th key={index} className="border border-gray-300 p-2 w-24 h-16">{day}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {days.map((day, dayIndex) => (
+              times[day]?.map((time, timeIndex) => (
+                <tr key={`${dayIndex}-${timeIndex}`}>
+                  <td className="border border-gray-300 p-2 w-24 h-16">{time}</td>
+                  {days.map((colDay, colDayIndex) => {
+                    const scheduleItem = schedule.find(
+                      (item) => item.day === colDay && item.start_time.startsWith(time)
+                    );
+                    return (
+                      <td
+                        key={colDayIndex}
+                        className={`border border-gray-300 p-2 w-24 h-16 ${scheduleItem ? 'bg-yellow-200' : ''}`}
+                      >
+                        {scheduleItem ? (
+                          <p>{scheduleItem.course.training}</p>
+                        ) : ''}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
 
 export default Table;

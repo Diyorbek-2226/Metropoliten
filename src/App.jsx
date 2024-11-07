@@ -1,5 +1,5 @@
 // src/App.js
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, Link } from "react-router-dom";
 import Login from "./pages/login/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import studentRoutes from "./routes/studentRoutes";
@@ -37,7 +37,7 @@ function App() {
         />
       ))}
 
-      <Route path="/not-authorized" element={<div>Not Authorized</div>} />
+      <Route path="/not-authorized" element={<Link className="flex justify-center bg-slate-500 p-2" to={'/login'}> saytga kirish uchun manashu yerga bosing </Link>} />
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>
   );
