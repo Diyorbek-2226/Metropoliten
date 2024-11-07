@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import studentRoutes from "./routes/studentRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import teacherRoutes from "./routes/teacherRoutes";
+import NotAuthorized from "./components/not-authorized/NotAutorized";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -37,7 +38,7 @@ function App() {
         />
       ))}
 
-      <Route path="/not-authorized" element={<Link className="flex justify-center bg-slate-500 p-2" to={'/login'}> saytga kirish uchun manashu yerga bosing </Link>} />
+      <Route path="/not-authorized" element={<NotAuthorized/>} />
       <Route path="*" element={<div>Page Not Found</div>} />
     </Routes>
   );

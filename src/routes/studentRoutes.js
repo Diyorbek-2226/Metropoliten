@@ -8,6 +8,7 @@ import Library from "./../components/libery/Libery";
 import ChildrenLibrary from "./../components/childrenLibery/ChildrenLibery";
 import TestTable from "./../components/testTable/TestTable";
 import Quiz from "./../components/quiz/Quiz";
+import TeacherList from "../components/teacherList/TeacherList";
 
 const studentRoutes = [
   { id: 1, path: "/student", element: HomePage },
@@ -19,6 +20,7 @@ const studentRoutes = [
   { id: 7, path: "/student/liberary/liberys", element: ChildrenLibrary },
   { id: 8, path: "/student/testtable", element: TestTable },
   { id: 9, path: "/student/testtable/quiz", element: Quiz },
+  { id: 10, path: "/student/teacherlist", element: TeacherList },
 ];
 
 export default studentRoutes;
