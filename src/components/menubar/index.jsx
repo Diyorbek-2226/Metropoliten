@@ -19,9 +19,9 @@ export const MenuBar = () => {
   const content = (
     <div loading={loading} className="font-mono ">
      <Link to={'/student/havola'}> Dars jadvali</Link>
-     <Link className="block" to={'/student/tasks'}>Vazifalar </Link>
+     <Link className="block" to={'/student/person'}>Vazifalar </Link>
      <Link className="block " to={'/student/liberary'}>Kutubxona</Link>
-     <Link className="block" to={'/student/testtable'}>Yakuniy test </Link>
+     <Link className="block" to={'/student/tasktable'}>Yakuniy test </Link>
       <Link to={'/student/person'}> Shaxsiy {"ma'lumotlar"}</Link>
       
     </div>

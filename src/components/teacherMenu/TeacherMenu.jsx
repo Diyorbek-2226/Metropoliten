@@ -22,10 +22,11 @@ export const TeacherMenu = () => {
   const content = (
     <div loading={loading} className="font-mono ">
      <Link to={'/teacher/havola'}> Dars jadvali</Link>
-     <Link className="block" to={'/teacher/tasks'}>Vazifalar </Link>
+     <Link className="block" to={'/teacher/person'}>Vazifalar </Link>
      <Link className="block " to={'/teacher/liberary'}>Kutubxona</Link>
-     <Link className="block" to={'/teacher/testtable'}>Yakuniy test </Link>
+     <Link className="block" to={'/teacher/tasktable'}>Yakuniy test </Link>
       <Link to={'/teacher/person'}> Shaxsiy {"ma'lumotlar"}</Link>
+      
       
     </div>
   );
