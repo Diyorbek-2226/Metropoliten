@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 
@@ -8,8 +8,20 @@ const Student = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [editStudentId, setEditStudentId] = useState(null);
-  const [editData, setEditData] = useState({});
   const limit = 20;
+
+  // useRef hooks for each field in StudentGet schema
+  const fullnameRef = useRef(null);
+  const birthdayRef = useRef(null);
+  const genderRef = useRef(null);
+  const addressRef = useRef(null);
+  const expertiseRef = useRef(null);
+  const placeOfBirthRef = useRef(null);
+  const workPlaceRef = useRef(null);
+  const studyPeriodRef = useRef(null);
+  const studyTypeRef = useRef(null);
+  const userRef = useRef(null);
+  const groupRef = useRef(null);
 
   useEffect(() => {
     fetchStudents();
@@ -26,37 +38,87 @@ const Student = () => {
   };
 
   const updateStudent = async (id) => {
-    try {
-      await axios.put(`http://67.205.170.103:8001/api/v1/main/student/${id}/`, editData);
-      fetchStudents();
-      setEditStudentId(null); // Exit edit mode
-    } catch (error) {
-      console.error('Error updating student:', error);
+    if (
+      fullnameRef.current &&
+      birthdayRef.current &&
+      genderRef.current &&
+      addressRef.current &&
+      expertiseRef.current &&
+      placeOfBirthRef.current &&
+      workPlaceRef.current &&
+      studyPeriodRef.current &&
+      studyTypeRef.current &&
+      userRef.current &&
+      groupRef.current
+    ) {
+      const updatedData = {
+        fullname: fullnameRef.current.value,
+        birthday: birthdayRef.current.value,
+        gender: genderRef.current.value,
+        address: addressRef.current.value,
+        expertise: expertiseRef.current.value,
+        place_of_birth: placeOfBirthRef.current.value,
+        work_place: workPlaceRef.current.value,
+        study_period: studyPeriodRef.current.value || null,
+        study_type: studyTypeRef.current.value || null,
+        user: parseInt(userRef.current.value, 10),
+        group: parseInt(groupRef.current.value, 10),
+      };
+
+      try {
+        const response = await axios.put(`http://67.205.170.103:8001/api/v1/main/student/${id}/`, updatedData);
+        if (response.status === 200) {
+          fetchStudents(); // Refresh the list
+          setEditStudentId(null); // Exit edit mode
+        }
+      } catch (error) {
+        console.error('Error updating student:', error.response ? error.response.data : error.message);
+      }
     }
   };
 
   const deleteStudent = async (id) => {
     try {
-      await axios.delete(`http://67.205.170.103:8001/api/v1/main/student/${id}/`);
-      fetchStudents();
+      const response = await axios.delete(`http://67.205.170.103:8001/api/v1/main/student/${id}/`);
+      if (response.status === 204) {
+        fetchStudents(); // Refresh the list after deletion
+      }
     } catch (error) {
-      console.error("Error deleting student:", error);
+      console.error('Error deleting student:', error.response ? error.response.data : error.message);
     }
   };
 
   const handleEditClick = (student) => {
     setEditStudentId(student.id);
-    setEditData(student); // Initialize editData with the student's current info
+    if (
+      fullnameRef.current &&
+      birthdayRef.current &&
+      genderRef.current &&
+      addressRef.current &&
+      expertiseRef.current &&
+      placeOfBirthRef.current &&
+      workPlaceRef.current &&
+      studyPeriodRef.current &&
+      studyTypeRef.current &&
+      userRef.current &&
+      groupRef.current
+    ) {
+      fullnameRef.current.value = student.fullname || '';
+      birthdayRef.current.value = student.birthday || '';
+      genderRef.current.value = student.gender || '';
+      addressRef.current.value = student.address || '';
+      expertiseRef.current.value = student.expertise || '';
+      placeOfBirthRef.current.value = student.place_of_birth || '';
+      workPlaceRef.current.value = student.work_place || '';
+      studyPeriodRef.current.value = student.study_period || '';
+      studyTypeRef.current.value = student.study_type || '';
+      userRef.current.value = student.user || '';
+      groupRef.current.value = student.group || '';
+    }
   };
 
   const handleCancelEdit = () => {
     setEditStudentId(null); // Exit edit mode without saving
-    setEditData({}); // Clear edit data
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditData({ ...editData, [name]: value });
   };
 
   const filteredStudents = students.filter(student =>
@@ -73,11 +135,11 @@ const Student = () => {
           type="text"
           placeholder="Search by Name"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded w-full"
+          onChange={(e) => setSearchTerm(e.target.value)} // Ensure this updates correctly
+          className="p-2 border rounded w-full sm:w-96"
         />
       </div>
-      <table className="w-full border-collapse border">
+      <table className="w-full border-collapse border text-sm sm:text-base">
         <thead>
           <tr>
             <th className="border p-2">#</th>
@@ -85,109 +147,100 @@ const Student = () => {
             <th className="border p-2">Birthday</th>
             <th className="border p-2">Gender</th>
             <th className="border p-2">Address</th>
-            <th className="border p-2">Expertise</th>
-            <th className="border p-2">Place of Birth</th>
-            <th className="border p-2">Study Period</th>
-            <th className="border p-2">Study Type</th>
-            <th className="border p-2">Passport</th>
-            <th className="border p-2">JSHSHIR</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredStudents.map((student, index) => (
-            <tr key={student.id}>
-              <td className="border p-2">{(currentPage - 1) * limit + index + 1}</td>
-              <td className="border p-2">
-                {editStudentId === student.id ? (
-                  <input
-                    type="text"
-                    name="fullname"
-                    value={editData.fullname}
-                    onChange={handleInputChange}
-                    className="p-1 border rounded"
-                  />
-                ) : (
-                  student.fullname
-                )}
-              </td>
-              <td className="border p-2">{editStudentId === student.id ? (
-                  <input
-                    type="text"
-                    name="birthday"
-                    value={editData.birthday}
-                    onChange={handleInputChange}
-                    className="p-1 border rounded"
-                  />
-                ) : (
-                  student.birthday
-                )}
-              </td>
-              <td className="border p-2">{editStudentId === student.id ? (
-                  <input
-                    type="text"
-                    name="gender"
-                    value={editData.gender}
-                    onChange={handleInputChange}
-                    className="p-1 border rounded"
-                  />
-                ) : (
-                  student.gender
-                )}
-              </td>
-              <td className="border p-2">{editStudentId === student.id ? (
-                  <input
-                    type="text"
-                    name="adress"
-                    value={editData.adress}
-                    onChange={handleInputChange}
-                    className="p-1 border rounded"
-                  />
-                ) : (
-                  student.adress
-                )}
-              </td>
-              <td className="border p-2">{student.expertise}</td>
-              <td className="border p-2">{student.place_of_birth}</td>
-              <td className="border p-2">{student.study_period}</td>
-              <td className="border p-2">{student.study_type}</td>
-              <td className="border p-2">{student.user.passport}</td>
-              <td className="border p-2">{student.user.jshshr}</td>
-              <td className="border p-2">
-                {editStudentId === student.id ? (
-                  <>
-                    <button 
-                      onClick={() => updateStudent(student.id)} 
-                      className="mr-2 bg-green-500 text-white p-1 rounded hover:bg-green-600"
-                    >
-                      <FaSave/>
-                    </button>
-                    <button 
-                      onClick={handleCancelEdit} 
-                      className="bg-gray-500 text-white p-1 rounded hover:bg-gray-600"
-                    >
-                      <FaTimes/>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button 
-                      onClick={() => handleEditClick(student)} 
-                      className="mr-2 bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
-                    >
-                      <FaEdit/>
-                    </button>
-                    <button 
-                      onClick={() => deleteStudent(student.id)} 
-                      className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
-                    >
-                      <FaTrash/>
-                    </button>
-                  </>
-                )}
-              </td>
+          {filteredStudents.length > 0 ? (
+            filteredStudents.map((student, index) => (
+              <tr key={student.id}>
+                <td className="border p-2">{(currentPage - 1) * limit + index + 1}</td>
+                <td className="border p-2">
+                  {editStudentId === student.id ? (
+                    <input
+                      ref={fullnameRef}
+                      type="text"
+                      name="fullname"
+                      className="p-1 border rounded w-full"
+                    />
+                  ) : (
+                    student.fullname
+                  )}
+                </td>
+                <td className="border p-2">
+                  {editStudentId === student.id ? (
+                    <input
+                      ref={birthdayRef}
+                      type="date"
+                      name="birthday"
+                      className="p-1 border rounded w-full"
+                    />
+                  ) : (
+                    student.birthday
+                  )}
+                </td>
+                <td className="border p-2">
+                  {editStudentId === student.id ? (
+                    <select ref={genderRef} className="w-full p-1 border rounded">
+                      <option value="female">Female</option>
+                      <option value="male">Male</option>
+                    </select>
+                  ) : (
+                    student.gender
+                  )}
+                </td>
+                <td className="border p-2">
+                  {editStudentId === student.id ? (
+                    <input
+                      ref={addressRef}
+                      type="text"
+                      name="address"
+                      className="p-1 border rounded w-full"
+                    />
+                  ) : (
+                    student.address
+                  )}
+                </td>
+                <td className="border p-2 flex justify-center gap-2">
+                  {editStudentId === student.id ? (
+                    <>
+                      <button 
+                        onClick={() => updateStudent(student.id)} 
+                        className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
+                      >
+                        <FaSave/>
+                      </button>
+                      <button 
+                        onClick={handleCancelEdit} 
+                        className="bg-gray-500 text-white p-1 rounded hover:bg-gray-600"
+                      >
+                        <FaTimes/>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button 
+                        onClick={() => handleEditClick(student)} 
+                        className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
+                      >
+                        <FaEdit/>
+                      </button>
+                      <button 
+                        onClick={() => deleteStudent(student.id)} 
+                        className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
+                      >
+                        <FaTrash/>
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="text-center p-4">No students found</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
       
@@ -197,9 +250,7 @@ const Student = () => {
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`px-3 py-1 border rounded ${
-              currentPage === page ? 'bg-blue-500 text-white' : 'bg-white'
-            }`}
+            className={`p-2 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
           >
             {page}
           </button>

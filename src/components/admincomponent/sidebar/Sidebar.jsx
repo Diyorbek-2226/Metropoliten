@@ -19,7 +19,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             </Link>
           </li>
           <li>
-            <Link to="/kutubxona" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            <Link to="/admin/addLibery" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
               <BookOpen className="w-5 h-5 mr-3" />
               Kutubxona
             </Link>
