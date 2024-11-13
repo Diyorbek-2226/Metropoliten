@@ -1,7 +1,8 @@
 import { FaDownload } from "react-icons/fa";
-import '../person/person.css';
-import BackButton from "../BackButton/BackButton";
+import '../../components/studentcomponent/person/person.css'
+
 import { useState, useEffect } from "react";
+import BackButton from "../BackButton/BackButton";
 
 export default function TasksTable() {
   const [task, setTask] = useState([]);

@@ -6,7 +6,9 @@ import picture3 from '../../assets/kabina.png';
 
 export default function Fanlar() {  
   const { data, loading, error } = useFetchData('main/course/');  
-  const subjects = data?.results || [];  
+  const subjects = data?.results || []; 
+  console.log(subjects);
+   
   
   // State for filtered subjects and current index  
   const [filteredSubjects, setFilteredSubjects] = useState(subjects);  

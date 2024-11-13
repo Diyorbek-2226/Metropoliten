@@ -1,35 +1,75 @@
-// AdminLayout.js
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import Sidebar from "../../../components/sidebar/Sidebar";
+
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import Sidebar from '../../../components/admincomponent/sidebar/Sidebar'
 
 const AdminLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    setIsSidebarOpen((prevState) => !prevState);
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar with Responsive Toggle */}
-      <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-      {/* Toggle Button for Mobile */}
-      <button
-        onClick={toggleSidebar}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-blue-600 text-white"
+    <Box sx={{ display: "flex", height: "100vh", width: "100vw" }}>
+      {/* Burger Menu Icon - Shows when sidebar is closed */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: 16,
+          left: isSidebarOpen ? "250px" : "16px",
+          zIndex: 100,
+        }}
       >
-        ☰ Menu
-      </button>
+        <IconButton onClick={toggleSidebar} color="inherit">
+          <MenuIcon />
+        </IconButton>
+      </Box>
+
+      {/* Sidebar */}
+      <Box
+        sx={{
+          width: "250px",
+          maxWidth: isSidebarOpen ? "250px" : "0",
+          transition: "all 0.3s ease",
+          overflow: "hidden",
+          backgroundColor: "gray.800",
+          color: "white",
+          height: "100vh", // Ensures full height of viewport
+          position: "absolute",
+          zIndex: 20, // Higher z-index to overlay content
+          left: isSidebarOpen ? "0" : "-250px",
+        }}
+      >
+        <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      </Box>
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-0 md:ml-64 p-6 pt-20 md:pt-8">
-        <div className="bg-white shadow-lg rounded-lg p-6 md:p-8 transition-all">
-          <Outlet />
-        </div>
-      </div>
-    </div>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          overflow: "hidden",
+          marginLeft: "0",
+          transition: "all 0.3s ease",
+        }}
+      >
+        <Box
+          sx={{
+            overflowY: "auto",
+            flex: 1,
+            p: 2,
+          }}
+        >
+          <Outlet /> {/* Content like AddTeacher renders here */}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

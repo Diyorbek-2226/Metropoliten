@@ -1,30 +1,31 @@
 import { Popover, Button } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { Link } from "react-router-dom";
+import BackButton from "../../BackButton/BackButton";
 
-
-
-export const MenuBar = () => {
+export const TeacherMenu = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
-  
-    
-    setTimeout(() => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
-  
+    return () => clearTimeout(timer); // Cleanup timer on unmount
+  }, []);
 
   const content = (
-    <div loading={loading} className="font-mono ">
-     <Link to={'/student/havola'}> Dars jadvali</Link>
-     <Link className="block" to={'/student/tasktable'}>Vazifalar </Link>
-     <Link className="block " to={'/student/liberary'}>Kutubxona</Link>
-     <Link className="block" to={'/student/tasktable'}>Yakuniy test </Link>
-      <Link to={'/student/person'}> Shaxsiy {"ma'lumotlar"}</Link>
-      
-    </div>
+  
+      <div className="font-mono">
+        <Link to="/teacher/table">Dars jadvali</Link>
+        <Link to="/teacher/person">Vazifalar</Link>
+        <Link to="/teacher/liberary">Kutubxona</Link>
+        <Link to="/teacher/quiz">Yakuniy test</Link> {/* Make sure this matches teacherRoutes */}
+        <Link to="/teacher/information">Shaxsiy ma'lumotlar</Link>
+        <a href="/teacher/information"> Shaxsiy ma'lumotlar</a>
+      </div>
+    
   );
 
   const toggleMenu = () => {
@@ -37,8 +38,6 @@ export const MenuBar = () => {
         content={content} 
         trigger="click" 
         placement="bottom"
-        visible={isOpen}
-        onVisibleChange={toggleMenu}
       >
         <Button className="font-mono" type="white" onClick={toggleMenu}>
           <div className="flex items-center gap-2">

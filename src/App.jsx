@@ -1,11 +1,19 @@
 // src/App.js
-import { Route, Routes, Navigate, Link } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "./pages/login/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import studentRoutes from "./routes/studentRoutes";
-import adminRoutes from "./routes/adminRoutes";
 import teacherRoutes from "./routes/teacherRoutes";
 import NotAuthorized from "./components/not-authorized/NotAutorized";
+import AdminLayout from "./pages/admin/AdminLayout/AdminLayout";
+import AddTeacher from "./components/admincomponent/addteacher/AddTeacher";
+import EditTeacher from "./components/admincomponent/editteacher/EditTeacher";
+import Student from "./components/admincomponent/student/Student";
+import AddStudent from "./components/admincomponent/addStudent/AddStudent";
+import NotFound from './components/notFound/not-found'
+import TaskForm from "./components/admincomponent/taskForm/TaskForm";
+
+
 
 function App() {
   const token = localStorage.getItem("token");
@@ -15,14 +23,17 @@ function App() {
       <Route path="/" element={token ? <Navigate to="/admin" /> : <Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
 
-      {adminRoutes.map(({ id, path, element }) => (
-        <Route
-          key={`admin-${id}`}
-          path={path}
-          element={<ProtectedRoute element={element} allowedRoles={["admin"]} />}
-        />
-      ))}
+      {/* Admin Routes with AdminLayout */}
+      <Route element={<ProtectedRoute allowedRoles={["admin"]} element={AdminLayout} />}>
+        <Route path="/admin" element={<div>Admin Home</div>} />
+        <Route path="/admin/addTeacher" element={<AddTeacher/>} />
+        <Route path="/admin/editTeacher" element={<EditTeacher/>} />
+        <Route path="/admin/Student" element={<Student/>} />
+        <Route path="/admin/addStudent" element={<AddStudent/>}/>
+        <Route path="/admin/addTable" element={<TaskForm/>}/>
+      </Route>
 
+      {/* Student and Teacher Routes */}
       {studentRoutes.map(({ id, path, element }) => (
         <Route
           key={`student-${id}`}
@@ -30,7 +41,7 @@ function App() {
           element={<ProtectedRoute element={element} allowedRoles={["student"]} />}
         />
       ))}
-       {teacherRoutes.map(({ id, path, element }) => (
+      {teacherRoutes.map(({ id, path, element }) => (
         <Route
           key={`teacher-${id}`}
           path={path}
@@ -38,8 +49,8 @@ function App() {
         />
       ))}
 
-      <Route path="/not-authorized" element={<NotAuthorized/>} />
-      <Route path="*" element={<div>Page Not Found</div>} />
+      <Route path="/not-authorized" element={<NotAuthorized />} />
+      <Route path="*" element={<NotFound/>} />
     </Routes>
   );
 }
