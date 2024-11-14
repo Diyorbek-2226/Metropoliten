@@ -1,27 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import useFetchData from '../../../hook/useFetch/UseFetch';
 
 const Student = () => {
   const [students, setStudents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [editStudentId, setEditStudentId] = useState(null);
+  const [editStudent, setEditStudent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const limit = 20;
 
-  // useRef hooks for each field in StudentGet schema
-  const fullnameRef = useRef(null);
-  const birthdayRef = useRef(null);
-  const genderRef = useRef(null);
-  const addressRef = useRef(null);
-  const expertiseRef = useRef(null);
-  const placeOfBirthRef = useRef(null);
-  const workPlaceRef = useRef(null);
-  const studyPeriodRef = useRef(null);
-  const studyTypeRef = useRef(null);
-  const userRef = useRef(null);
-  const groupRef = useRef(null);
+  const { data: grupes, error, loading } = useFetchData('/main/group/');
+  const Groups = grupes?.results || [];
 
   useEffect(() => {
     fetchStudents();
@@ -37,108 +28,54 @@ const Student = () => {
     }
   };
 
-  const updateStudent = async (id) => {
-    if (
-      fullnameRef.current &&
-      birthdayRef.current &&
-      genderRef.current &&
-      addressRef.current &&
-      expertiseRef.current &&
-      placeOfBirthRef.current &&
-      workPlaceRef.current &&
-      studyPeriodRef.current &&
-      studyTypeRef.current &&
-      userRef.current &&
-      groupRef.current
-    ) {
+  const fetchSingleStudent = async (id) => {
+    try {
+      const response = await axios.get(`http://67.205.170.103:8001/api/v1/main/student/${id}/`);
+      setEditStudent(response.data);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching student data:', error);
+    }
+  };
+
+  const updateStudent = async () => {
+    try {
       const updatedData = {
-        fullname: fullnameRef.current.value,
-        birthday: birthdayRef.current.value,
-        gender: genderRef.current.value,
-        address: addressRef.current.value,
-        expertise: expertiseRef.current.value,
-        place_of_birth: placeOfBirthRef.current.value,
-        work_place: workPlaceRef.current.value,
-        study_period: studyPeriodRef.current.value || null,
-        study_type: studyTypeRef.current.value || null,
-        user: parseInt(userRef.current.value, 10),
-        group: parseInt(groupRef.current.value, 10),
+        fullname: editStudent.fullname,
+        birthday: editStudent.birthday,
+        gender: editStudent.gender,
+        adress: editStudent.adress,
+        expertise: editStudent.expertise,
+        place_of_birth: editStudent.place_of_birth,
+        work_place: editStudent.work_place,
+        study_period: editStudent.study_period,
+        study_type: editStudent.study_type,
+        user: editStudent.user.id,
+        group: editStudent.group.id
       };
 
-      try {
-        const response = await axios.put(`http://67.205.170.103:8001/api/v1/main/student/${id}/`, updatedData);
-        if (response.status === 200) {
-          fetchStudents(); // Refresh the list
-          setEditStudentId(null); // Exit edit mode
-        }
-      } catch (error) {
-        console.error('Error updating student:', error.response ? error.response.data : error.message);
-      }
-    }
-  };
-
-  const deleteStudent = async (id) => {
-    try {
-      const response = await axios.delete(`http://67.205.170.103:8001/api/v1/main/student/${id}/`);
-      if (response.status === 204) {
-        fetchStudents(); // Refresh the list after deletion
+      const response = await axios.put(`http://67.205.170.103:8001/api/v1/main/student/${editStudent.id}/`, updatedData);
+      if (response.status === 200) {
+        fetchStudents();
+        setShowModal(false);
       }
     } catch (error) {
-      console.error('Error deleting student:', error.response ? error.response.data : error.message);
+      console.error('Error updating student:', error);
     }
   };
 
-  const handleEditClick = (student) => {
-    setEditStudentId(student.id);
-    if (
-      fullnameRef.current &&
-      birthdayRef.current &&
-      genderRef.current &&
-      addressRef.current &&
-      expertiseRef.current &&
-      placeOfBirthRef.current &&
-      workPlaceRef.current &&
-      studyPeriodRef.current &&
-      studyTypeRef.current &&
-      userRef.current &&
-      groupRef.current
-    ) {
-      fullnameRef.current.value = student.fullname || '';
-      birthdayRef.current.value = student.birthday || '';
-      genderRef.current.value = student.gender || '';
-      addressRef.current.value = student.address || '';
-      expertiseRef.current.value = student.expertise || '';
-      placeOfBirthRef.current.value = student.place_of_birth || '';
-      workPlaceRef.current.value = student.work_place || '';
-      studyPeriodRef.current.value = student.study_period || '';
-      studyTypeRef.current.value = student.study_type || '';
-      userRef.current.value = student.user || '';
-      groupRef.current.value = student.group || '';
+  const handlePagination = (direction) => {
+    if (direction === 'next' && currentPage * limit < totalCount) {
+      setCurrentPage(prev => prev + 1);
+    } else if (direction === 'prev' && currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
     }
   };
-
-  const handleCancelEdit = () => {
-    setEditStudentId(null); // Exit edit mode without saving
-  };
-
-  const filteredStudents = students.filter(student =>
-    student.fullname.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(totalCount / limit);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Student List</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by Name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Ensure this updates correctly
-          className="p-2 border rounded w-full sm:w-96"
-        />
-      </div>
+
       <table className="w-full border-collapse border text-sm sm:text-base">
         <thead>
           <tr>
@@ -147,117 +84,173 @@ const Student = () => {
             <th className="border p-2">Birthday</th>
             <th className="border p-2">Gender</th>
             <th className="border p-2">Address</th>
+            <th className="border p-2">Expertise</th>
+            <th className="border p-2">Place of Birth</th>
+            <th className="border p-2">Study Period</th>
+            <th className="border p-2">Study Type</th>
+            <th className="border p-2">Group</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredStudents.length > 0 ? (
-            filteredStudents.map((student, index) => (
-              <tr key={student.id}>
-                <td className="border p-2">{(currentPage - 1) * limit + index + 1}</td>
-                <td className="border p-2">
-                  {editStudentId === student.id ? (
-                    <input
-                      ref={fullnameRef}
-                      type="text"
-                      name="fullname"
-                      className="p-1 border rounded w-full"
-                    />
-                  ) : (
-                    student.fullname
-                  )}
-                </td>
-                <td className="border p-2">
-                  {editStudentId === student.id ? (
-                    <input
-                      ref={birthdayRef}
-                      type="date"
-                      name="birthday"
-                      className="p-1 border rounded w-full"
-                    />
-                  ) : (
-                    student.birthday
-                  )}
-                </td>
-                <td className="border p-2">
-                  {editStudentId === student.id ? (
-                    <select ref={genderRef} className="w-full p-1 border rounded">
-                      <option value="female">Female</option>
-                      <option value="male">Male</option>
-                    </select>
-                  ) : (
-                    student.gender
-                  )}
-                </td>
-                <td className="border p-2">
-                  {editStudentId === student.id ? (
-                    <input
-                      ref={addressRef}
-                      type="text"
-                      name="address"
-                      className="p-1 border rounded w-full"
-                    />
-                  ) : (
-                    student.address
-                  )}
-                </td>
-                <td className="border p-2 flex justify-center gap-2">
-                  {editStudentId === student.id ? (
-                    <>
-                      <button 
-                        onClick={() => updateStudent(student.id)} 
-                        className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
-                      >
-                        <FaSave/>
-                      </button>
-                      <button 
-                        onClick={handleCancelEdit} 
-                        className="bg-gray-500 text-white p-1 rounded hover:bg-gray-600"
-                      >
-                        <FaTimes/>
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button 
-                        onClick={() => handleEditClick(student)} 
-                        className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
-                      >
-                        <FaEdit/>
-                      </button>
-                      <button 
-                        onClick={() => deleteStudent(student.id)} 
-                        className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
-                      >
-                        <FaTrash/>
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center p-4">No students found</td>
+          {students.map((student, index) => (
+            <tr key={student.id}>
+              <td className="border p-2">{(currentPage - 1) * limit + index + 1}</td>
+              <td className="border p-2">{student.fullname}</td>
+              <td className="border p-2">{student.birthday}</td>
+              <td className="border p-2">{student.gender}</td>
+              <td className="border p-2">{student.adress}</td>
+              <td className="border p-2">{student.expertise}</td>
+              <td className="border p-2">{student.place_of_birth}</td>
+              <td className="border p-2">{student.study_period}</td>
+              <td className="border p-2">{student.study_type}</td>
+              <td className="border p-2">{student.group?.name}</td>
+              <td className="border p-2 flex justify-center gap-2">
+                <button 
+                  onClick={() => fetchSingleStudent(student.id)} 
+                  className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
+                >
+                  <FaEdit />
+                </button>
+                <button 
+                  onClick={() => deleteStudent(student.id)} 
+                  className="bg-red-500 text-white p-1 rounded hover:bg-red-600"
+                >
+                  <FaTrash />
+                </button>
+              </td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
-      
-      {/* Pagination */}
-      <div className="mt-4 flex justify-center gap-2">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`p-2 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          >
-            {page}
-          </button>
-        ))}
+
+      <div className="flex justify-between mt-4">
+        <button onClick={() => handlePagination('prev')} disabled={currentPage === 1} className="bg-gray-500 text-white p-2 rounded">
+          Previous
+        </button>
+        <button onClick={() => handlePagination('next')} disabled={currentPage * limit >= totalCount} className="bg-gray-500 text-white p-2 rounded">
+          Next
+        </button>
       </div>
+
+      {showModal && editStudent && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-8 rounded-lg w-full sm:w-96 shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Edit Student</h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-500">
+                <FaTimes size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+<input 
+  type="text" 
+  value={editStudent.fullname || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, fullname: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Full Name"
+/>
+<input 
+  type="date" 
+  value={editStudent.birthday || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, birthday: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Birthday"
+/>
+<input 
+  type="text" 
+  value={editStudent.gender || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, gender: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Gender"
+/>
+<input 
+  type="text" 
+  value={editStudent.adress || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, adress: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Address"
+/>
+<input 
+  type="text" 
+  value={editStudent.expertise || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, expertise: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Expertise"
+/>
+<input 
+  type="text" 
+  value={editStudent.place_of_birth || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, place_of_birth: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Place of Birth"
+/>
+<input 
+  type="text" 
+  value={editStudent.work_place || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, work_place: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Work Place"
+/>
+<input 
+  type="date" 
+  value={editStudent.study_period || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, study_period: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Study Period"
+/>
+<input 
+  type="text" 
+  value={editStudent.study_type || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, study_type: e.target.value })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="Study Type"
+/>
+<input 
+  type="number" 
+  value={editStudent.user.id || ''} 
+  onChange={(e) => setEditStudent({ ...editStudent, user: { ...editStudent.user, id: e.target.value } })} 
+  className="w-full p-2 border border-gray-300 rounded"
+  placeholder="User ID"
+/>
+<select
+                value={editStudent.group?.id || ''}
+                onChange={(e) => setEditStudent({ ...editStudent, group: { id: e.target.value } })}
+                className="w-full p-2 border border-gray-300 rounded"
+              >
+                <option value="">Select Group</option>
+                {students?.map(group => (
+                  <option key={group.id} value={group.id}>{group.name}</option>
+                ))}
+              </select>
+
+<div className="flex justify-between gap-4 mt-6">
+  <button 
+    onClick={updateStudent} 
+    className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
+  >
+    Save
+  </button>
+  <button 
+    onClick={() => setShowModal(false)} 
+    className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+  >
+    Cancel
+  </button>
+</div>
+</div> 
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Student;
+
+
+
+
+
+{/* */}
