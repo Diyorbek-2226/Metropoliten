@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
-import useFetchData from '../../../hook/useFetch/UseFetch';
+
 
 const Student = () => {
   const [students, setStudents] = useState([]);
@@ -10,9 +10,9 @@ const Student = () => {
   const [editStudent, setEditStudent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const limit = 20;
-
-  const { data: grupes, error, loading } = useFetchData('/main/group/');
-  const Groups = grupes?.results || [];
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  
 
   useEffect(() => {
     fetchStudents();
@@ -219,9 +219,9 @@ const Student = () => {
                 onChange={(e) => setEditStudent({ ...editStudent, group: { id: e.target.value } })}
                 className="w-full p-2 border border-gray-300 rounded"
               >
-                <option value="">Select Group</option>
+               
                 {students?.map(group => (
-                  <option key={group.id} value={group.id}>{group.name}</option>
+                  <option className='text-red-500 ' key={group?.group.id} value={group.id}>{group?.group.name}</option>
                 ))}
               </select>
 

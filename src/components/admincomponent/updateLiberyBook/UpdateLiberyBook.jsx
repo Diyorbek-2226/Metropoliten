@@ -1,22 +1,37 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 
 const AddLibraryBook = () => {
   const nameRef = useRef();
   const typeRef = useRef();
+  const fileRef = useRef(); // For the file input
+  const imageRef = useRef(); // For the image input (if needed)
+
+  const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = {
-      name: nameRef.current.value,
-      type: typeRef.current.value,
-    };
+    // Create a new FormData object to send both file and image along with text data
+    const formData = new FormData();
+    formData.append('name', nameRef.current.value);
+    formData.append('type', typeRef.current.value);
+    
+    // Append file and image if available
+    if (fileRef.current.files[0]) {
+      formData.append('file', fileRef.current.files[0]);
+    }
+    if (imageRef.current.files[0]) {
+      formData.append('image', imageRef.current.files[0]);
+    }
 
     try {
       const response = await axios.post('http://67.205.170.103:8001/api/v1/main/library/', formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data', // Ensure the correct content type for file upload
+          'Authorization': `Bearer ${token}`, // Add the token in the Authorization header
         },
       });
       console.log('Book added successfully:', response.data);
@@ -24,7 +39,9 @@ const AddLibraryBook = () => {
       
       // Clear the inputs after successful submission
       nameRef.current.value = '';
-      typeRef.current.value = 'artistic';
+      typeRef.current.value = 'artistic'; // Reset to default value
+      fileRef.current.value = ''; // Reset the file input
+      imageRef.current.value = ''; // Reset the image input
     } catch (error) {
       console.error('Error adding book:', error.response?.data || error.message);
       alert('Failed to add book. Please check the console for more details.');
@@ -53,14 +70,32 @@ const AddLibraryBook = () => {
           id="type"
           ref={typeRef}
           required
-          defaultValue="artistic"
+          defaultValue="artistic" // Default value
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="artistic">Artistic</option>
-          <option value="scientific">Scientific</option>
-          <option value="historical">Historical</option>
-          <option value="fiction">Fiction</option>
+         
         </select>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="file" className="block text-sm font-medium text-gray-700">Upload File (Optional)</label>
+        <input
+          type="file"
+          id="file"
+          ref={fileRef}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="image" className="block text-sm font-medium text-gray-700">Upload Image (Optional)</label>
+        <input
+          type="file"
+          id="image"
+          ref={imageRef}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
 
       <button
