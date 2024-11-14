@@ -13,6 +13,7 @@ import AddStudent from "./components/admincomponent/addStudent/AddStudent";
 import NotFound from './components/notFound/not-found'
 import TaskForm from "./components/admincomponent/taskForm/TaskForm";
 import UpdateLibraryBook from "./components/admincomponent/updateLiberyBook/UpdateLiberyBook";
+import AdminLibery from "./components/admincomponent/adminLibery/AdminLibery";
 
 
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/admin/addStudent" element={<AddStudent/>}/>
         <Route path="/admin/addTable" element={<TaskForm/>}/>
         <Route path="/admin/addLibery" element={<UpdateLibraryBook/>}/>
+        <Route path="/admin/editLibery" element={<AdminLibery/>}/>
       </Route>
 
       {/* Student and Teacher Routes */}

@@ -21,6 +21,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <li>
             <Link to="/admin/addLibery" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
               <BookOpen className="w-5 h-5 mr-3" />
+              Kitob qo'shish
+            </Link>
+            <Link to="/admin/editLibery" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+              <BookOpen className="w-5 h-5 mr-3" />
               Kutubxona
             </Link>
           </li>
@@ -28,6 +32,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             <Link to="/admin/Student" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">
               <Users className="w-5 h-5 mr-3" />
               Talabalar
+            </Link>
+            <Link className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors" to={'/admin/addStudent'}>
+              <UserPlus className="w-5 h-5 mr-3" />
+              Talaba qo'shish
             </Link>
           </li>
           <li>
@@ -64,10 +72,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
               Oqituvchini ro'yxati
             </Link>
            
-            <Link className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors" to={'/admin/addStudent'}>
-              <UserPlus className="w-5 h-5 mr-3" />
-              Talaba qo'shish
-            </Link>
+           
           </li>
         </ul>
       </div>
