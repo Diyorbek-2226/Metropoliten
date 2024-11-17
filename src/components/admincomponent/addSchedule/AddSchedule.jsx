@@ -1,5 +1,7 @@
-import { useRef, useState } from 'react';  
+import { useRef } from 'react';  
 import useFetchData from '../../../hook/useFetch/UseFetch';  
+import usePostRequest from '../../../hook/postRequest/PostRequest';
+ // Import the new hook  
 
 export default function AddSchedule() {  
   const { data: groupData, error: groupError, loading: groupLoading } = useFetchData('main/group/');  
@@ -14,15 +16,10 @@ export default function AddSchedule() {
   const teacherRef = useRef(0);  
   const courseRef = useRef(0);  
 
-  const [isSubmitting, setIsSubmitting] = useState(false);  
-
-  // Retrieve token from localStorage or wherever it's stored  
-  const token = localStorage.getItem('token');   
+  const { postRequest, loading: isSubmitting, error: postError } = usePostRequest('main/schedule/'); // Use the post request hook  
 
   const handleSubmit = async (e) => {  
     e.preventDefault();  
-
-    setIsSubmitting(true);  
 
     // Collect form data and parse group, teacher, and course as integers  
     const formData = {  
@@ -38,31 +35,15 @@ export default function AddSchedule() {
     // Basic validation for time  
     if (formData.start_time >= formData.end_time) {  
       alert('End time must be later than start time.');  
-      setIsSubmitting(false);  
       return;  
     }  
 
     try {  
-      const response = await fetch('http://67.205.170.103:8001/api/v1/main/schedule/', {  
-        method: 'POST',  
-        headers: {  
-          'Content-Type': 'application/json',  
-          Authorization: `Bearer ${token}`,   
-        },  
-        body: JSON.stringify(formData),  
-      });  
-
-      if (!response.ok) {  
-        const errorData = await response.json();  
-        throw new Error(errorData.message || 'Failed to add schedule');  
-      }  
+      await postRequest(formData); // Use the postRequest function from the hook  
       console.log('Schedule added successfully');  
       // Optionally reset form or redirect  
     } catch (error) {  
-      console.error('Error:', error);  
       alert(`Error: ${error.message}`);  
-    } finally {  
-      setIsSubmitting(false);  
     }  
   };  
 
@@ -144,6 +125,8 @@ export default function AddSchedule() {
       >  
         {isSubmitting ? 'Submitting...' : 'Add Schedule'}  
       </button>  
+
+      {postError && <div className="text-red-500">{postError.message}</div>} {/* Display error if any */}  
     </form>  
   );  
 }
