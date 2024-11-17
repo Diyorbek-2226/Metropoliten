@@ -11,9 +11,14 @@ import EditTeacher from "./components/admincomponent/editteacher/EditTeacher";
 import Student from "./components/admincomponent/student/Student";
 import AddStudent from "./components/admincomponent/addStudent/AddStudent";
 import NotFound from './components/notFound/not-found'
-import TaskForm from "./components/admincomponent/taskForm/TaskForm";
+
 import UpdateLibraryBook from "./components/admincomponent/updateLiberyBook/UpdateLiberyBook";
 import AdminLibery from "./components/admincomponent/adminLibery/AdminLibery";
+import AddGroup from "./components/admincomponent/addGroup/AddGroup";
+import Logout from "./components/logout/Logout";
+import Schedule from "./components/admincomponent/schedule/Schedule";
+import AddSchedule from "./components/admincomponent/addSchedule/AddSchedule";
+
 
 
 
@@ -32,9 +37,12 @@ function App() {
         <Route path="/admin/editTeacher" element={<EditTeacher/>} />
         <Route path="/admin/Student" element={<Student/>} />
         <Route path="/admin/addStudent" element={<AddStudent/>}/>
-        <Route path="/admin/addTable" element={<TaskForm/>}/>
+        <Route path="/admin/addTable" element={<AddSchedule/>}/>
+        <Route path="/admin/scheduleTable" element={<Schedule/>}/>
         <Route path="/admin/addLibery" element={<UpdateLibraryBook/>}/>
         <Route path="/admin/editLibery" element={<AdminLibery/>}/>
+        <Route path="/admin/AddGroup" element={<AddGroup/>}/>
+        <Route path="/logout" element={<Logout/>} />
       </Route>
 
       {/* Student and Teacher Routes */}

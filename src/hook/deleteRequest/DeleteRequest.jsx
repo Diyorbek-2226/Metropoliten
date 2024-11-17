@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../../config/DataService';
 
 const apiUrl = 'http://67.205.170.103:8001/api/v1/';
 
@@ -13,7 +14,7 @@ const DeleteRequest = (endpoint) => {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await axios.delete(`${apiUrl}${endpoint}`, {
+      const response = await axiosInstance.delete(`${apiUrl}${endpoint}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

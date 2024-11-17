@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import Axios from 'axios';
-
-
-const apiUrl = 'http://67.205.170.103:8001/api/v1/';
+import axiosInstance from '../../config/DataService';
 
 const usePostRequest = (endpoint) => {
   const [loading, setLoading] = useState(false);
@@ -14,8 +11,8 @@ const usePostRequest = (endpoint) => {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await Axios.post(
-        `${apiUrl}${endpoint}`,
+      const response = await axiosInstance.post(
+        `${endpoint}`,
         data,
         {
           headers: {

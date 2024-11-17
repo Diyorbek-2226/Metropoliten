@@ -1,26 +1,25 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "../../config/DataService";
 
 // Async thunk for login
 export const login = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (obj, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://67.205.170.103:8001/api/v1/common/token/obtain",
-        obj
-      );
-      localStorage.setItem("token", response.data.access);
+      const response = await axiosInstance.post("common/token/obtain", obj);
       return response.data;
     } catch (error) {
-      localStorage.setItem("errorLogin", error.message);
-      return rejectWithValue(error.message);
+      // Xato xabarini olish
+      const errorMessage =
+        error.response?.data?.message || error.message || "Login error";
+      localStorage.setItem("errorLogin", errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
 
 export const AuthSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState: {
     value: 0,
     currentUser: null,
@@ -36,10 +35,11 @@ export const AuthSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = action.payload.data;
-        localStorage.setItem("role" , action.payload.data.role)
-        localStorage.setItem("id" , action.payload.data.id);
-        
+        state.currentUser = action.payload;
+        localStorage.setItem("token", action.payload.access);
+        localStorage.setItem("refresh_token", action.payload.refresh);
+        localStorage.setItem("role", action.payload.role);
+        localStorage.setItem("id", action.payload.id);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

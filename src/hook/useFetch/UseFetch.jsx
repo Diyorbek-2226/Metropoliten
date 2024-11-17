@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+
+import axiosInstance from '../../config/DataService';
 
 const apiUrl = 'http://67.205.170.103:8001/api/v1/';
 
@@ -12,7 +13,7 @@ const useFetchData = (url) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${apiUrl}${url}`);
+        const response = await axiosInstance.get(`${apiUrl}${url}`);
         setData(response.data);
       } catch (err) {
         setError(err);
