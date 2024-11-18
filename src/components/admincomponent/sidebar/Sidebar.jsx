@@ -7,6 +7,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const [teachersDropdownOpen, setTeachersDropdownOpen] = useState(false);
   const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
   const [scheduleDropdownOpen, setScheduleDropdownOpen] = useState(false);
+  const [courseDropdownOpen, setCourseDropdownOpen] = useState(false); // New state for course dropdown
 
   return (
     <>
@@ -15,7 +16,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative md:inset-0`}
       >
-        <ul className="space-y-2 h-[calc(100vh-2rem)] overflow-y-auto">
+        <ul className="space-y-2 h-[calc(100vh-2rem)] mt-8 overflow-y-auto">
           
           {/* Schedule Dropdown */}
           <li>
@@ -39,13 +40,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   to="/admin/addTable"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  Jadval qo'shish
+                  AddTable
                 </Link>
                 <Link
                   to="/admin/scheduleTable"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  Jadvalni ko'rish
+                  Table
                 </Link>
               </div>
             )}
@@ -73,13 +74,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   to="/admin/addLibery"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  add book
+                  Add book
                 </Link>
                 <Link
                   to="/admin/editLibery"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  books
+                  Books
                 </Link>
               </div>
             )}
@@ -153,6 +154,40 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             )}
           </li>
 
+          {/* Course Dropdown */}
+          <li>
+            <div
+              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
+              onClick={() => setCourseDropdownOpen(!courseDropdownOpen)}
+            >
+              <div className="flex items-center">
+                <Beaker className="w-5 h-5 mr-3" />
+                Fanlar
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${
+                  courseDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+            {courseDropdownOpen && (
+              <div className="ml-6 space-y-1 mt-2 bg-blue-800/30 rounded-lg p-2">
+                <Link
+                  to="/admin/addCourse"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Add Course
+                </Link>
+                <Link
+                  to="/admin/Course"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Courses
+                </Link>
+              </div>
+            )}
+          </li>
+
           {/* Other Links */}
           <li>
             <Link
@@ -161,16 +196,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             >
               <FileText className="w-5 h-5 mr-3" />
               Normativ hujjatlar
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/fan-yaratish"
-              className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
-            >
-              <Beaker className="w-5 h-5 mr-3" />
-              Fan yaratish
             </Link>
           </li>
 

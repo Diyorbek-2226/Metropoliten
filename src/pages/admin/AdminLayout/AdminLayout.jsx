@@ -4,7 +4,8 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import Sidebar from '../../../components/admincomponent/sidebar/Sidebar'
+import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
+import Sidebar from '../../../components/admincomponent/sidebar/Sidebar';
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -25,7 +26,7 @@ const AdminLayout = () => {
         }}
       >
         <IconButton onClick={toggleSidebar} color="inherit">
-          <MenuIcon />
+          {isSidebarOpen ? <CloseIcon /> : <MenuIcon />} {/* Toggle between MenuIcon and CloseIcon */}
         </IconButton>
       </Box>
 
@@ -42,6 +43,7 @@ const AdminLayout = () => {
           position: "absolute",
           zIndex: 20, // Higher z-index to overlay content
           left: isSidebarOpen ? "0" : "-250px",
+          display: { xs: "none", sm: "block" }, // Hide sidebar on small screens
         }}
       >
         <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
@@ -55,15 +57,15 @@ const AdminLayout = () => {
           flexDirection: "column",
           height: "100%",
           overflow: "hidden",
-          marginLeft: "0",
-          transition: "all 0.3s ease",
+          marginLeft: isSidebarOpen ? "250px" : "0", // Adjust main content margin based on sidebar
+          transition: "margin-left 0.3s ease", // Smooth transition for content when sidebar opens/closes
+          p: { xs: 1, sm: 2 }, // Padding adjusted for small screens
         }}
       >
         <Box
           sx={{
             overflowY: "auto",
             flex: 1,
-            p: 2,
           }}
         >
           <Outlet /> {/* Content like AddTeacher renders here */}

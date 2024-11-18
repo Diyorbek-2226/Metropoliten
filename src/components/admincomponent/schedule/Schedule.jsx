@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import useFetchData from '../../../hook/useFetch/UseFetch';
 import axiosInstance from '../../../config/DataService';
 
@@ -15,7 +15,7 @@ const Schedule = () => {
   const handleEdit = (schedule) => {
     setEditingSchedule({
       ...schedule,
-      day: new Date(schedule.day).toISOString().split('T')[0], // Format date properly
+      day: new Date(schedule.day).toISOString().split('T')[0],
     });
   };
   
@@ -23,7 +23,6 @@ const Schedule = () => {
     e.preventDefault();
     setIsUpdating(true);
   
-    // Destructure necessary data to match the backend format
     const { id, title, day, start_time, end_time, group, teacher, course} = editingSchedule;
     const scheduleData = {
       title:title,

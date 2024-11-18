@@ -9,7 +9,6 @@ export const login = createAsyncThunk(
       const response = await axiosInstance.post("common/token/obtain", obj);
       return response.data;
     } catch (error) {
-      // Xato xabarini olish
       const errorMessage =
         error.response?.data?.message || error.message || "Login error";
       localStorage.setItem("errorLogin", errorMessage);
@@ -39,7 +38,7 @@ export const AuthSlice = createSlice({
         localStorage.setItem("token", action.payload.access);
         localStorage.setItem("refresh_token", action.payload.refresh);
         localStorage.setItem("role", action.payload.role);
-        localStorage.setItem("id", action.payload.id);
+        localStorage.setItem("id", JSON.stringify(action.payload.data.id));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
