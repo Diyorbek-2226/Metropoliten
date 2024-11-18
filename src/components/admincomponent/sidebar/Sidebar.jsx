@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Logout from "../../logout/Logout";
-import { Link2, LogOut } from "lucide-react";
-import { Calendar, BookOpen, Users, FileText, Beaker, UserPlus, ClipboardList, School, ChevronDown } from 'lucide-react';
+import { Calendar, BookOpen, Users, FileText, Beaker, UserPlus, ClipboardList, School, ChevronDown, LogOut } from 'lucide-react';
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const [studentsDropdownOpen, setStudentsDropdownOpen] = useState(false);
   const [teachersDropdownOpen, setTeachersDropdownOpen] = useState(false);
   const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
-  const [tableOpen, setTableOpen] = useState(false);
+  const [scheduleDropdownOpen, setScheduleDropdownOpen] = useState(false);
 
   return (
     <>
@@ -18,116 +16,181 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         } md:translate-x-0 md:relative md:inset-0`}
       >
         <ul className="space-y-2 h-[calc(100vh-2rem)] overflow-y-auto">
-          <li>
-            <Link to="/admin/addTable" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-              <Calendar className="w-5 h-5 mr-3" />
-             jadval qoshish
-            </Link>
-          </li>
-          <li>
-            <Link className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors" to={'/admin/scheduleTable'}>
-            Jadval 
-             </Link>
-          </li>
           
+          {/* Schedule Dropdown */}
           <li>
-            <div 
-              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer" 
+            <div
+              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
+              onClick={() => setScheduleDropdownOpen(!scheduleDropdownOpen)}
+            >
+              <div className="flex items-center">
+                <Calendar className="w-5 h-5 mr-3" />
+                Jadval
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${
+                  scheduleDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+            {scheduleDropdownOpen && (
+              <div className="ml-6 space-y-1 mt-2 bg-blue-800/30 rounded-lg p-2">
+                <Link
+                  to="/admin/addTable"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Jadval qo'shish
+                </Link>
+                <Link
+                  to="/admin/scheduleTable"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Jadvalni ko'rish
+                </Link>
+              </div>
+            )}
+          </li>
+
+          {/* Books Dropdown */}
+          <li>
+            <div
+              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
               onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
             >
               <div className="flex items-center">
                 <BookOpen className="w-5 h-5 mr-3" />
                 Kitoblar
               </div>
-              <ChevronDown className={`w-4 h-4 transition-transform ${booksDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${
+                  booksDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
             </div>
             {booksDropdownOpen && (
               <div className="ml-6 space-y-1 mt-2 bg-blue-800/30 rounded-lg p-2">
-                <Link to="/admin/addLibery" className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-                  <UserPlus className="w-5 h-5 mr-3" />
-                  Kitob qo'shish
+                <Link
+                  to="/admin/addLibery"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  add book
                 </Link>
-                <Link to="/admin/editLibery" className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-                  <BookOpen className="w-5 h-5 mr-3" />
-                  Kitoblar
+                <Link
+                  to="/admin/editLibery"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  books
                 </Link>
               </div>
             )}
           </li>
 
+          {/* Students Dropdown */}
           <li>
-            <div 
-              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer" 
+            <div
+              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
               onClick={() => setStudentsDropdownOpen(!studentsDropdownOpen)}
             >
               <div className="flex items-center">
                 <Users className="w-5 h-5 mr-3" />
                 Talabalar
               </div>
-              <ChevronDown className={`w-4 h-4 transition-transform ${studentsDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${
+                  studentsDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
             </div>
             {studentsDropdownOpen && (
               <div className="ml-6 space-y-1 mt-2 bg-blue-800/30 rounded-lg p-2">
-                <Link to="/admin/addStudent" className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-                  <UserPlus className="w-5 h-5 mr-3" />
+                <Link
+                  to="/admin/addStudent"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
                   Add student
                 </Link>
-                <Link to="/admin/Student" className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-                  <Users className="w-5 h-5 mr-3" />
+                <Link
+                  to="/admin/Student"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
                   Students
                 </Link>
               </div>
             )}
           </li>
-          
-          <li>
-            <Link to="/normativ-hujjatlar" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-              <FileText className="w-5 h-5 mr-3" />
-              Normativ hujjatlar
-            </Link>
-          </li>
 
+          {/* Teachers Dropdown */}
           <li>
-            <Link to="/fan-yaratish" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-              <Beaker className="w-5 h-5 mr-3" />
-              Fan yaratish
-            </Link>
-          </li>
-
-          <li>
-            <div 
-              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer" 
+            <div
+              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
               onClick={() => setTeachersDropdownOpen(!teachersDropdownOpen)}
             >
               <div className="flex items-center">
                 <School className="w-5 h-5 mr-3" />
                 O'qituvchilar
               </div>
-              <ChevronDown className={`w-4 h-4 transition-transform ${teachersDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${
+                  teachersDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
             </div>
             {teachersDropdownOpen && (
               <div className="ml-6 space-y-1 mt-2 bg-blue-800/30 rounded-lg p-2">
-                <Link to="/admin/addteacher" className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-                  <UserPlus className="w-5 h-5 mr-3" />
+                <Link
+                  to="/admin/addteacher"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
                   Add teacher
                 </Link>
-                <Link to="/admin/editTeacher" className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-                  <School className="w-5 h-5 mr-3" />
-                  Teacher
+                <Link
+                  to="/admin/editTeacher"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Teachers
                 </Link>
               </div>
             )}
           </li>
 
+          {/* Other Links */}
           <li>
-            <Link to="/test-yaratish" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
+            <Link
+              to="/normativ-hujjatlar"
+              className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+            >
+              <FileText className="w-5 h-5 mr-3" />
+              Normativ hujjatlar
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/fan-yaratish"
+              className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+            >
+              <Beaker className="w-5 h-5 mr-3" />
+              Fan yaratish
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/test-yaratish"
+              className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+            >
               <ClipboardList className="w-5 h-5 mr-3" />
               Test yaratish
             </Link>
           </li>
+
+          {/* Logout Link */}
           <li>
-          <Link to="/logout" className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors">
-          <LogOut className="w-5 h-5 mr-3" />
+            <Link
+              to="/logout"
+              className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+            >
+              <LogOut className="w-5 h-5 mr-3" />
               Logout
             </Link>
           </li>

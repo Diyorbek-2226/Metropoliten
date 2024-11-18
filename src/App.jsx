@@ -17,7 +17,8 @@ import AdminLibery from "./components/admincomponent/adminLibery/AdminLibery";
 import AddGroup from "./components/admincomponent/addGroup/AddGroup";
 import Logout from "./components/logout/Logout";
 import Schedule from "./components/admincomponent/schedule/Schedule";
-import AddSchedule from "./components/admincomponent/addSchedule/AddSchedule";
+import AddSchedule from "./components/admincomponent/taskForm/AddSchedule";
+// import AddSchedule from "./components/admincomponent/addSchedule/AddSchedule
 
 
 
@@ -37,7 +38,8 @@ function App() {
         <Route path="/admin/editTeacher" element={<EditTeacher/>} />
         <Route path="/admin/Student" element={<Student/>} />
         <Route path="/admin/addStudent" element={<AddStudent/>}/>
-        <Route path="/admin/addTable" element={<AddSchedule/>}/>
+        {/* <Route path="/admin/addTable" element={<AddSchedule/>}/> */}
+          <Route path="/admin/addTable" element={<AddSchedule/>}/>
         <Route path="/admin/scheduleTable" element={<Schedule/>}/>
         <Route path="/admin/addLibery" element={<UpdateLibraryBook/>}/>
         <Route path="/admin/editLibery" element={<AdminLibery/>}/>

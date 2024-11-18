@@ -52,6 +52,8 @@ export default function AddSchedule() {
 
   const groups = groupData?.results || [];  
   const teachers = teacherData?.results || [];  
+  console.log(groups);
+  
   const courses = courseData?.results || [];  
 
   return (  
