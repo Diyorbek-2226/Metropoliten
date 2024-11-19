@@ -7,12 +7,69 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const [teachersDropdownOpen, setTeachersDropdownOpen] = useState(false);
   const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
   const [scheduleDropdownOpen, setScheduleDropdownOpen] = useState(false);
-  const [courseDropdownOpen, setCourseDropdownOpen] = useState(false); // New state for course dropdown
+  const [courseDropdownOpen, setCourseDropdownOpen] = useState(false);
+  const [normativeDropdownOpen, setNormativeDropdownOpen] = useState(false);
+
+  // Function to toggle dropdowns, closing others when opening a new one
+  const handleDropdownToggle = (dropdown) => {
+    switch(dropdown) {
+      case 'schedule':
+        setScheduleDropdownOpen(!scheduleDropdownOpen);
+        setBooksDropdownOpen(false);
+        setStudentsDropdownOpen(false);
+        setTeachersDropdownOpen(false);
+        setCourseDropdownOpen(false);
+        setNormativeDropdownOpen(false);
+        break;
+      case 'books':
+        setBooksDropdownOpen(!booksDropdownOpen);
+        setScheduleDropdownOpen(false);
+        setStudentsDropdownOpen(false);
+        setTeachersDropdownOpen(false);
+        setCourseDropdownOpen(false);
+        setNormativeDropdownOpen(false);
+        break;
+      case 'students':
+        setStudentsDropdownOpen(!studentsDropdownOpen);
+        setScheduleDropdownOpen(false);
+        setBooksDropdownOpen(false);
+        setTeachersDropdownOpen(false);
+        setCourseDropdownOpen(false);
+        setNormativeDropdownOpen(false);
+        break;
+      case 'teachers':
+        setTeachersDropdownOpen(!teachersDropdownOpen);
+        setScheduleDropdownOpen(false);
+        setBooksDropdownOpen(false);
+        setStudentsDropdownOpen(false);
+        setCourseDropdownOpen(false);
+        setNormativeDropdownOpen(false);
+        break;
+      case 'courses':
+        setCourseDropdownOpen(!courseDropdownOpen);
+        setScheduleDropdownOpen(false);
+        setBooksDropdownOpen(false);
+        setStudentsDropdownOpen(false);
+        setTeachersDropdownOpen(false);
+        setNormativeDropdownOpen(false);
+        break;
+      case 'normative':
+        setNormativeDropdownOpen(!normativeDropdownOpen);
+        setScheduleDropdownOpen(false);
+        setBooksDropdownOpen(false);
+        setStudentsDropdownOpen(false);
+        setTeachersDropdownOpen(false);
+        setCourseDropdownOpen(false);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <>
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-br from-blue-800 to-black  text-white p-6 transform transition-transform ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-br from-blue-800 to-black text-white p-6 transform transition-transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative md:inset-0`}
       >
@@ -22,11 +79,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <li>
             <div
               className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
-              onClick={() => setScheduleDropdownOpen(!scheduleDropdownOpen)}
+              onClick={() => handleDropdownToggle('schedule')}
             >
               <div className="flex items-center">
                 <Calendar className="w-5 h-5 mr-3" />
-                Jadval
+                Schedule
               </div>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
@@ -40,7 +97,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   to="/admin/addTable"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  AddTable
+                  Add Table
                 </Link>
                 <Link
                   to="/admin/scheduleTable"
@@ -56,11 +113,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <li>
             <div
               className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
-              onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
+              onClick={() => handleDropdownToggle('books')}
             >
               <div className="flex items-center">
                 <BookOpen className="w-5 h-5 mr-3" />
-                Kitoblar
+                Books
               </div>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
@@ -74,7 +131,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   to="/admin/addLibery"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  Add book
+                  Add Book
                 </Link>
                 <Link
                   to="/admin/editLibery"
@@ -90,11 +147,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <li>
             <div
               className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
-              onClick={() => setStudentsDropdownOpen(!studentsDropdownOpen)}
+              onClick={() => handleDropdownToggle('students')}
             >
               <div className="flex items-center">
                 <Users className="w-5 h-5 mr-3" />
-                Talabalar
+                Students
               </div>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
@@ -108,7 +165,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   to="/admin/addStudent"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  Add student
+                  Add Student
                 </Link>
                 <Link
                   to="/admin/Student"
@@ -124,11 +181,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <li>
             <div
               className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
-              onClick={() => setTeachersDropdownOpen(!teachersDropdownOpen)}
+              onClick={() => handleDropdownToggle('teachers')}
             >
               <div className="flex items-center">
                 <School className="w-5 h-5 mr-3" />
-                O'qituvchilar
+                Teachers
               </div>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
@@ -142,7 +199,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   to="/admin/addteacher"
                   className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
                 >
-                  Add teacher
+                  Add Teacher
                 </Link>
                 <Link
                   to="/admin/editTeacher"
@@ -158,11 +215,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           <li>
             <div
               className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
-              onClick={() => setCourseDropdownOpen(!courseDropdownOpen)}
+              onClick={() => handleDropdownToggle('courses')}
             >
               <div className="flex items-center">
                 <Beaker className="w-5 h-5 mr-3" />
-                Fanlar
+                Courses
               </div>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
@@ -188,24 +245,48 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             )}
           </li>
 
-          {/* Other Links */}
+          {/* Normative Dropdown */}
           <li>
-            <Link
-              to="/normativ-hujjatlar"
-              className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+            <div
+              className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors cursor-pointer"
+              onClick={() => handleDropdownToggle('normative')}
             >
-              <FileText className="w-5 h-5 mr-3" />
-              Normativ hujjatlar
-            </Link>
+              <div className="flex items-center">
+                <FileText className="w-5 h-5 mr-3" />
+                Normative Documents
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${
+                  normativeDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+            {normativeDropdownOpen && (
+              <div className="ml-6 space-y-1 mt-2 bg-blue-800/30 rounded-lg p-2">
+                <Link
+                  to="/admin/addDocument"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Add Document
+                </Link>
+                <Link
+                  to="/admin/Document"
+                  className="flex items-center py-2 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
+                >
+                  Documents
+                </Link>
+              </div>
+            )}
           </li>
 
+          {/* Test Creation */}
           <li>
             <Link
               to="/test-yaratish"
               className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
             >
               <ClipboardList className="w-5 h-5 mr-3" />
-              Test yaratish
+              Create Test
             </Link>
           </li>
 

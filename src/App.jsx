@@ -20,6 +20,8 @@ import Schedule from "./components/admincomponent/schedule/Schedule";
 import AddSchedule from "./components/admincomponent/taskForm/AddSchedule";
 import AddCourse from "./components/admincomponent/addCourse/AddCourse";
 import Course from "./components/admincomponent/course/Course";
+import AddDocument from "./components/admincomponent/addDocument/AddDocument";
+import Document from "./components/admincomponent/document/Document";
 // import AddSchedule from "./components/admincomponent/addSchedule/AddSchedule
 
 
@@ -47,6 +49,8 @@ function App() {
         <Route path="/admin/addLibery" element={<UpdateLibraryBook/>}/>
         <Route path="/admin/editLibery" element={<AdminLibery/>}/>
         <Route path="/admin/AddGroup" element={<AddGroup/>}/>
+        <Route path="/admin/AddDocument" element={<AddDocument/>}/>
+        <Route path="/admin/Document" element={<Document/>}/>
         <Route path="/logout" element={<Logout/>} />
       </Route>
 
