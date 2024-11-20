@@ -14,6 +14,8 @@ const PutRequest = (endpoint) => {
     const token = localStorage.getItem('token');
 
     try {
+      console.log("aesfrtyu" , endpoint);
+      
       const response = await axiosInstance.put(`${apiUrl}${endpoint}`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,

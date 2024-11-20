@@ -4,6 +4,7 @@ import { Pencil, Trash2, X } from 'lucide-react';
 import useFetchData from '../../../hook/useFetch/UseFetch';
 import PutRequest from '../../../hook/putRequest/PutRequest';
 import DeleteRequest from '../../../hook/deleteRequest/DeleteRequest';
+import axiosInstance from '../../../config/DataService';
 
 export default function Document() {
   const { data: documentData, loading, error, refetch } = useFetchData('main/documents/');
@@ -47,11 +48,15 @@ export default function Document() {
   };
 
   const handleUpdate = async (e) => {
+    console.log(editingDoc.id);
+    
+    console.log(editForm);
+    const obj = {...editForm , file:"http://67.205.170.103:8001/media/documents/Screenshot_143.png"}
     e.preventDefault();
     try {
-      await putRequest(`${editingDoc.id}/`, editForm);
+      await axiosInstance.put(`/main/documents/${editingDoc.id}`, obj);
       setEditingDoc(null);
-      refetch(); // Refetch the data after update
+      refetch(); 
     } catch (err) {
       console.error('Failed to update document:', err);
     }
