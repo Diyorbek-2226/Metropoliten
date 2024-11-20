@@ -35,7 +35,7 @@ export default function Person() {
     }, []);  
 
     return (  
-        <header className="person p-4 sm:p-6 h-[140vh]">  
+        <header className="person bg-gradient-to-br from-blue-400 to-white p-4 sm:p-6 h-[140vh]">  
             <div className="container mx-auto max-w-xl">  
                 <div className="flex items-center justify-between mb-4">  
                     <h2 className="text-lg sm:text-2xl font-semibold text-gray-800">Shaxsiy Ma'lumotlar</h2>  

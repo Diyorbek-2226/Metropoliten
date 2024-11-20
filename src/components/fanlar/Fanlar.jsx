@@ -1,65 +1,79 @@
-import  { useState, useEffect } from 'react';  
-import useFetchData from '../../hook/useFetch/UseFetch';   
-import picture1 from '../../assets/temiryol.png';   
-import picture2 from '../../assets/metro.png';   
-import picture3 from '../../assets/kabina.png';   
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Calendar, Clock, Users, BookOpen } from 'lucide-react';
+import useFetchData from '../../hook/useFetch/UseFetch';
 
-export default function Fanlar() {  
-  const { data, loading, error } = useFetchData('main/course/');  
-  const subjects = data?.results || []; 
-  console.log(subjects);
-   
-  
-  // State for filtered subjects and current index  
-  const [filteredSubjects, setFilteredSubjects] = useState(subjects);  
-  const [currentIndex, setCurrentIndex] = useState(0);  
 
-  useEffect(() => {  
-    setFilteredSubjects(subjects);  // Directly set filtered subjects to all subjects  
-  }, [subjects]);  
+export default function Fanlar() {
+  const { data, loading, error } = useFetchData('main/course/');
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const nextCard = () => {  
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.ceil(filteredSubjects.length / 4));  
-  };  
+  const subjects = data?.results || [];
 
-  const prevCard = () => {  
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + Math.ceil(filteredSubjects.length / 4)) % Math.ceil(filteredSubjects.length / 4));  
-  };  
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [subjects]);
 
-  const displayedCards = filteredSubjects.slice(currentIndex * 4, currentIndex * 4 + 4);  
+  const nextCard = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.ceil(subjects.length / 4));
+  };
 
-  return (  
-    <div className="container mx-auto w-4/5 mt-12 mb-12">  
-      <h1 className="text-3xl font-bold text-center mb-8">Fanlar</h1>  
+  const prevCard = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + Math.ceil(subjects.length / 4)) % Math.ceil(subjects.length / 4));
+  };
+
+  const displayedCards = subjects.slice(currentIndex * 4, currentIndex * 4 + 4);
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div></div>;
+  if (error) return <div className="text-center py-10 text-red-500 font-semibold">Error loading subjects. Please try again later.</div>;
+
+  return (
+    <div className="container mx-auto px-4 py-12 bg-gradient-to-b from-gray-50 to-white">
+      <h1 className="text-4xl font-bold text-center mb-12 text-primary">Fanlar</h1>
       
-      <div className="relative flex items-center justify-center">  
-        <button onClick={prevCard} className="absolute left-0 p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition duration-300">  
-          ❮  
-        </button>  
-        <div className="flex gap-4 overflow-hidden w-full px-12">  
-          {displayedCards.map((subject, index) => (  
-            <div key={index} className="bg-white rounded-lg shadow-lg p-4 w-64 flex-shrink-0">  
-              <img   
-                src={index === 0 ? picture1 : index === 1 ? picture2 : picture3} // Use the images based on the index  
-                alt={subject.name}  
-                className="w-full h-32 object-cover rounded-t-lg" // Adjust image size  
-              />  
-              <h3 className="mt-4 text-gray-800 font-semibold text-lg">{subject.name}</h3>  
-              <p>Study Period: {subject.study_period}</p>  
-              <p>Lesson Day: {subject.lesson_day}</p>   
-              <p>Group: {subject.group.name}</p>  
-              <button className="mt-4 w-full text-white bg-green-500 hover:bg-green-600 rounded-lg py-2 transition duration-300">  
-                {subject.training}  
-              </button>  
-            </div>  
-          ))}  
-        </div>  
-        <button onClick={nextCard} className="absolute right-0 p-2 bg-gray-300 rounded-full hover:bg-gray-400 transition duration-300">  
-          ❯  
-        </button>  
-      </div>  
-      {loading && <p>Loading...</p>}  
-      {error && <p>Error loading subjects!</p>}  
-    </div>  
-  );  
+      <div className="relative">
+        <button 
+          onClick={prevCard} 
+          className="absolute left-0 top-1/2 -translate-y-1/2 p-3 bg-primary text-white rounded-full hover:bg-primary-dark transition duration-300 z-10 shadow-lg"
+          aria-label="Previous"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-6">
+          {displayedCards.map((subject) => (
+            <div 
+              key={subject.id} 
+              className="bg-white rounded-xl shadow-xl p-6 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 flex-shrink-0 snap-start transform transition duration-500 hover:scale-105"
+            >
+              <h3 className="text-xl font-semibold mb-4 text-primary">{subject.name}</h3>
+              <div className="space-y-3">
+                <p className="flex items-center text-gray-600">
+                  <Calendar className="w-5 h-5 mr-2 text-primary" />
+                  <span className="font-medium">Study Period:</span> {subject.study_period}
+                </p>
+                <p className="flex items-center text-gray-600">
+                  <Clock className="w-5 h-5 mr-2 text-primary" />
+                  <span className="font-medium">Lesson Day:</span> {subject.lesson_day}
+                </p>
+                <p className="flex items-center text-gray-600">
+                  <Users className="w-5 h-5 mr-2 text-primary" />
+                  <span className="font-medium">Group:</span> {subject.group.name}
+                </p>
+              </div>
+              <button className="mt-6 w-full text-white bg-primary hover:bg-primary-dark rounded-lg py-3 transition duration-300 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 mr-2" />
+                {subject.training}
+              </button>
+            </div>
+          ))}
+        </div>
+        <button 
+          onClick={nextCard} 
+          className="absolute right-0 top-1/2 -translate-y-1/2 p-3 bg-primary text-white rounded-full hover:bg-primary-dark transition duration-300 z-10 shadow-lg"
+          aria-label="Next"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+    </div>
+  );
 }

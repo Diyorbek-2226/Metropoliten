@@ -282,7 +282,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           {/* Test Creation */}
           <li>
             <Link
-              to="/test-yaratish"
+              to="/addAnswer"
               className="flex items-center py-3 px-4 rounded-lg hover:bg-blue-700/50 transition-colors"
             >
               <ClipboardList className="w-5 h-5 mr-3" />
