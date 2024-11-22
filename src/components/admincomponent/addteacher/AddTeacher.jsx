@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import '../../studentcomponent/person/person.css'; // Adjust the path if needed
-import PostRequest from '../../../hook/postRequest/PostRequest';
+import usePostRequest from '../../../hook/postRequest/PostRequest';
 
 export default function AddTeacher() {
   // references for inputs
@@ -13,9 +13,9 @@ export default function AddTeacher() {
   const adress = useRef();
   const placeOfBirth = useRef();
   const workPlace = useRef();
-  const avatar = useRef(); // Avatar URL input
+  const avatar = useRef(null); // File input for avatar
 
-  const { postRequest, loading, error } = PostRequest('main/teacher/');
+  const { postRequest, loading, error } = usePostRequest('main/teacher/');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +30,12 @@ export default function AddTeacher() {
       adress: adress.current.value,
       place_of_birth: placeOfBirth.current.value,
       work_place: workPlace.current.value,
-      avatar: avatar.current?.value || null, // Avatar URL
     };
 
+    const file = avatar.current.files[0];
+
     try {
-      await postRequest(data); // Send data without file upload
+      await postRequest(data, file);
       alert('Muvofaqiyatli qo\'shildi');
     } catch (err) {
       if (err.response) {
@@ -150,11 +151,11 @@ export default function AddTeacher() {
               />
             </div>
             <div className="col-span-1 sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Avatar URL</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Avatar</label>
               <input
                 ref={avatar}
-                type="url"
-                placeholder="Enter Avatar URL (optional)"
+                type="file"
+                accept="image/*"
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition duration-200"
               />
             </div>
@@ -179,3 +180,4 @@ export default function AddTeacher() {
     </div>
   );
 }
+

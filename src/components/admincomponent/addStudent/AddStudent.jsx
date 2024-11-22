@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import usePostRequest from '../../../hook/postRequest/PostRequest';
 import useFetchData from '../../../hook/useFetch/UseFetch';
 
@@ -21,8 +21,6 @@ const AddStudent = () => {
   const { data: groupsData, error: fetchError, loading: fetchLoading } = useFetchData('main/group/');
   const Groups = groupsData?.results || [];
 
-  const token = localStorage.getItem('token');
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,17 +39,15 @@ const AddStudent = () => {
       study_type: studyType.current.value,
     };
 
-    const formData = new FormData();
-    Object.keys(data).forEach((key) => {
-      formData.append(key, data[key]);
-    });
+    const file = avatar.current.files[0];
 
- await postRequest(formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+    try {
+      await postRequest(data, file);
+      alert('Talaba muvaffaqiyatli qo\'shildi');
+      // You might want to reset the form here
+    } catch (err) {
+      console.error('Error adding student:', err);
+    }
   };
 
   return (
@@ -122,11 +118,11 @@ const AddStudent = () => {
               <input ref={studyType} type="text" placeholder="Enter Study Type" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" required />
             </div>
             <div className="col-span-1 sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Avatar URL</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Avatar</label>
               <input 
                 ref={avatar} 
-                type="url" 
-                placeholder="Enter Avatar URL" 
+                type="file" 
+                accept="image/*"
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
               />
             </div>
@@ -140,7 +136,7 @@ const AddStudent = () => {
               </button>
             </div>
           </form>
-          {postError && <div className="text-red-600 text-center mt-4">{postError}</div>}
+          {postError && <div className="text-red-600 text-center mt-4">{postError.message || 'An error occurred while adding the student.'}</div>}
         </div>
       </div>
     </div>
@@ -148,3 +144,4 @@ const AddStudent = () => {
 };
 
 export default AddStudent;
+

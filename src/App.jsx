@@ -22,7 +22,7 @@ import AddCourse from "./components/admincomponent/addCourse/AddCourse";
 import Course from "./components/admincomponent/course/Course";
 import AddDocument from "./components/admincomponent/addDocument/AddDocument";
 import Document from "./components/admincomponent/document/Document";
-import QuizTab from "./components/admincomponent/addAnswer/QuizTAB";
+
 // import AddSchedule from "./components/admincomponent/addSchedule/AddSchedule
 
 
@@ -53,7 +53,7 @@ function App() {
         <Route path="/admin/AddDocument" element={<AddDocument/>}/>
         <Route path="/admin/Document" element={<Document/>}/>
         <Route path="/logout" element={<Logout/>} />
-        <Route path="/addAnswer" element={<QuizTab></QuizTab>}></Route>
+        
       </Route>
 
       {/* Student and Teacher Routes */}

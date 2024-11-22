@@ -1,179 +1,211 @@
-import React, { useRef, useState } from 'react';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+//AddLibraryBook
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Book, FileText, Image, Upload } from 'lucide-react';
 
-const AddLibraryBook = () => {
-  const nameRef = useRef();
-  const typeRef = useRef();
-  const fileRef = useRef();
-  const imageRef = useRef();
-  const [fileName, setFileName] = useState('');
-  const [imageName, setImageName] = useState('');
+function AddLibraryBook() {
+  const [libraryData, setLibraryData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [showForm, setShowForm] = useState(false);
+  const [newItem, setNewItem] = useState({
+    name: '',
+    type: 'artistic',
+    file: null,
+    image: null
+  });
 
-  const token = localStorage.getItem('token');
+  useEffect(() => {
+    fetchLibraryData();
+  }, [page]);
 
-  const handleFileChange = (e, setNameFunc) => {
-    if (e.target.files[0]) {
-      setNameFunc(e.target.files[0].name);
+  const fetchLibraryData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`http://67.205.170.103:8001/api/v1/main/library/?limit=20&offset=${(page - 1) * 20}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch library data');
+      }
+      const data = await response.json();
+      setLibraryData(data);
+    } catch (err) {
+      setError('Error fetching library data');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = (fileUrl) => {
+    window.open(fileUrl, '_blank');
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'file' || name === 'image') {
+      setNewItem(prev => ({ ...prev, [name]: files[0] || null }));
     } else {
-      setNameFunc('');
+      setNewItem(prev => ({ ...prev, [name]: value }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('name', nameRef.current.value);
-    formData.append('type', typeRef.current.value);
-    
-    if (fileRef.current.files[0]) {
-      formData.append('file', fileRef.current.files[0]);
-    }
-    if (imageRef.current.files[0]) {
-      formData.append('image', imageRef.current.files[0]);
-    }
-
+    setLoading(true);
     try {
-      const response = await axios.post('http://67.205.170.103:8001/api/v1/main/library/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        },
+      const formData = new FormData();
+      Object.entries(newItem).forEach(([key, value]) => {
+        if (value !== null) {
+          formData.append(key, value);
+        }
       });
-      toast.success('Book added successfully!');
-      
-      nameRef.current.value = '';
-      typeRef.current.value = 'artistic';
-      fileRef.current.value = '';
-      imageRef.current.value = '';
-      setFileName('');
-      setImageName('');
-    } catch (error) {
-      console.error('Error adding book:', error.response?.data || error.message);
-      toast.error('Failed to add book. Please try again.');
+
+      const response = await fetch('http://67.205.170.103:8001/api/v1/main/library/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add new library item');
+      }
+
+      toast.success('New library item added successfully');
+      setNewItem({ name: '', type: 'artistic', file: null, image: null });
+      setShowForm(false);
+      fetchLibraryData();
+    } catch (err) {
+      toast.error('Error adding new library item');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (loading && !libraryData) {
+    return <div className="text-center p-4">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500 p-4">{error}</div>;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4">
-          <h2 className="text-2xl font-bold text-white text-center">Add New Book to Library</h2>
-        </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium text-gray-700 flex items-center">
-              <Book className="w-5 h-5 mr-2 text-blue-500" />
-              Book Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              ref={nameRef}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              placeholder="Enter the book name"
-            />
-          </div>
+    <div className="container mx-auto p-4">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Kitoblar va Kitob Qo'shish</h1>
+        <button onClick={() => setShowForm(!showForm)} className="bg-blue-500 text-white px-4 py-2 rounded">
+          {showForm ? 'qoshish uchun' : 'Kitob qoshish'}
+        </button>
+      </div>
 
-          <div className="space-y-2">
-            <label htmlFor="type" className="text-sm font-medium text-gray-700 flex items-center">
-              <FileText className="w-5 h-5 mr-2 text-blue-500" />
-              Type
-            </label>
-            <select
-              id="type"
-              ref={typeRef}
-              required
-              defaultValue="artistic"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            >
-              <option value="artistic">Artistic</option>
-            </select>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="file" className="text-sm font-medium text-gray-700 flex items-center">
-              <Upload className="w-5 h-5 mr-2 text-blue-500" />
-              Upload File (Optional)
-            </label>
-            <div className="flex items-center space-x-2">
+      {showForm && (
+        <form onSubmit={handleSubmit} className="mb-8 p-4 bg-gray-100 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="name" className="block mb-1">Name</label>
               <input
-                type="file"
+                id="name"
+                name="name"
+                value={newItem.name}
+                onChange={handleInputChange}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label htmlFor="type" className="block mb-1">Type</label>
+              <select
+                id="type"
+                name="type"
+                value={newItem.type}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded"
+              >
+                <option value="artistic">Artistic</option>
+                <option value="scientific">Scientific</option>
+                <option value="educational">Educational</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="file" className="block mb-1">File (PDF)</label>
+              <input
                 id="file"
-                ref={fileRef}
-                onChange={(e) => handleFileChange(e, setFileName)}
-                className="hidden"
-              />
-              <label
-                htmlFor="file"
-                className="px-4 py-2 bg-blue-100 text-blue-600 rounded-md cursor-pointer hover:bg-blue-200 transition flex-grow text-center"
-              >
-                {fileName || 'Choose file'}
-              </label>
-              {fileName && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    fileRef.current.value = '';
-                    setFileName('');
-                  }}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="image" className="text-sm font-medium text-gray-700 flex items-center">
-              <Image className="w-5 h-5 mr-2 text-blue-500" />
-              Upload Image (Optional)
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
+                name="file"
                 type="file"
-                id="image"
-                ref={imageRef}
-                onChange={(e) => handleFileChange(e, setImageName)}
-                className="hidden"
+                accept=".pdf"
+                onChange={handleInputChange}
+                required
+                className="w-full p-2 border rounded"
               />
-              <label
-                htmlFor="image"
-                className="px-4 py-2 bg-blue-100 text-blue-600 rounded-md cursor-pointer hover:bg-blue-200 transition flex-grow text-center"
-              >
-                {imageName || 'Choose image'}
-              </label>
-              {imageName && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    imageRef.current.value = '';
-                    setImageName('');
-                  }}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Clear
-                </button>
-              )}
+            </div>
+            <div>
+              <label htmlFor="image" className="block mb-1">Image</label>
+              <input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleInputChange}
+                required
+                className="w-full p-2 border rounded"
+              />
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-2 rounded-md hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition"
-          >
-            Add Book
+          <button type="submit" className="mt-4 bg-green-500 text-white px-4 py-2 rounded" disabled={loading}>
+            {loading ? 'Adding...' : 'Add Item'}
           </button>
         </form>
+      )}
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {libraryData?.results.map((item) => (
+          <div key={item.id} className="border rounded-lg overflow-hidden">
+            <div className="relative h-48 bg-gray-200">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-4">
+              <h2 className="font-semibold text-lg mb-2">{item.name}</h2>
+              <p className="text-sm text-gray-600">Type: {item.type}</p>
+            </div>
+            <div className="p-4 pt-0">
+              <button
+                onClick={() => handleDownload(item.file)}
+                className="w-full bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Download PDF
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-      <ToastContainer position="top-center" autoClose={3000} />
+
+      {(libraryData?.next || libraryData?.previous) && (
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            disabled={!libraryData.previous || loading}
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+          >
+            Previous
+          </button>
+          <button
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            disabled={!libraryData.next || loading}
+            onClick={() => setPage(p => p + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default AddLibraryBook;
+

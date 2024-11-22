@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-
 import { Pencil, Trash2, X } from 'lucide-react';
 import useFetchData from '../../../hook/useFetch/UseFetch';
-import PutRequest from '../../../hook/putRequest/PutRequest';
-import DeleteRequest from '../../../hook/deleteRequest/DeleteRequest';
+import useDeleteRequest from '../../../hook/deleteRequest/DeleteRequest';
 import axiosInstance from '../../../config/DataService';
 
 export default function Document() {
   const { data: documentData, loading, error, refetch } = useFetchData('main/documents/');
-  const { putRequest, loading: putLoading, error: putError } = PutRequest('main/documents/');
-  const { deleteRequest, loading: deleteLoading, error: deleteError } = DeleteRequest('main/documents/');
+  const { deleteRequest, loading: deleteLoading, error: deleteError } = useDeleteRequest('main/documents/');
   const [documents, setDocuments] = useState([]);
 
   const [editingDoc, setEditingDoc] = useState(null);
@@ -48,15 +45,12 @@ export default function Document() {
   };
 
   const handleUpdate = async (e) => {
-    console.log(editingDoc.id);
-    
-    console.log(editForm);
-    const obj = {...editForm , file:"http://67.205.170.103:8001/media/documents/Screenshot_143.png"}
     e.preventDefault();
     try {
-      await axiosInstance.put(`/main/documents/${editingDoc.id}`, obj);
+      const updatedDoc = { ...editForm, file: editingDoc.file };
+      await axiosInstance.put(`/main/documents/${editingDoc.id}/`, updatedDoc);
       setEditingDoc(null);
-      refetch(); 
+      refetch();
     } catch (err) {
       console.error('Failed to update document:', err);
     }
@@ -66,14 +60,14 @@ export default function Document() {
     if (window.confirm('Are you sure you want to delete this document?')) {
       try {
         await deleteRequest(`${id}/`);
-        refetch(); // Refetch the data after deletion
+        refetch();
       } catch (err) {
         console.error('Failed to delete document:', err);
       }
     }
   };
 
-  if (loading || putLoading || deleteLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (loading || deleteLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
   if (error) return <div className="text-red-500 text-center">Error: {error.message}</div>;
 
   return (
@@ -166,21 +160,21 @@ export default function Document() {
             <div className="flex items-center justify-end">
               <button 
                 type="submit"
-                disabled={putLoading}
                 className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
-                {putLoading ? 'Updating...' : 'Update'}
+                Update
               </button>
             </div>
           </form>
         </div>
       )}
 
-      {(putError || deleteError) && (
+      {deleteError && (
         <div className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          Error: {putError?.message || deleteError?.message}
+          Error: {deleteError.message}
         </div>
       )}
     </div>
   );
 }
+

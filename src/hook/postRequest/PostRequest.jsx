@@ -5,19 +5,31 @@ const usePostRequest = (endpoint) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const postRequest = async (data) => {
+  const postRequest = async (data, file = null) => {
     setLoading(true);
     setError(null);
     const token = localStorage.getItem('token');
 
+    const formData = new FormData();
+    
+    // If there's a file, append it to formData
+    if (file) {
+      formData.append('file', file);
+    }
+    
+    // Append other data to formData
+    Object.keys(data).forEach(key => {
+      formData.append(key, data[key]);
+    });
+
     try {
       const response = await axiosInstance.post(
         `${endpoint}`,
-        data,
+        formData,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            // Don't set Content-Type, it will be set automatically for FormData
           },
         }
       );
@@ -35,3 +47,4 @@ const usePostRequest = (endpoint) => {
 };
 
 export default usePostRequest;
+
